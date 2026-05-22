@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Instalação — Sistema de Câmeras Clippa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f0f0f0;
+    color: #111;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .page {
+    width: 794px;
+    background: #fff;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.18);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #0a0a0a;
+    padding: 44px 52px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,90,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,90,0,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-title-block { text-align: right; }
+  .header-badge {
+    display: inline-block;
+    border: 1px solid rgba(255,90,0,0.5);
+    color: #ff5a00;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 400;
+    margin-top: 4px;
+  }
+  .header-bar {
+    height: 4px;
+    background: #ff5a00;
+    margin-top: 32px;
+  }
+
+  /* ── INTRO ── */
+  .intro {
+    padding: 32px 52px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .intro p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #444;
+  }
+
+  /* ── BODY ── */
+  .body { padding: 0 52px 40px; }
+
+  /* ── SECTION ── */
+  .section { margin-top: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .section-number {
+    width: 40px;
+    height: 40px;
+    background: #ff5a00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+  }
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: #eee;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    padding-left: 56px;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist {
+    padding-left: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f9f9f9;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    padding: 11px 14px;
+  }
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ff5a00;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+  .check-label { font-size: 13px; color: #222; font-weight: 500; }
+  .check-qty {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff5a00;
+    background: rgba(255,90,0,0.08);
+    border-radius: 10px;
+    padding: 1px 7px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ── STEPS ── */
+  .steps { padding-left: 56px; display: flex; flex-direction: column; gap: 10px; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border-left: 3px solid #ff5a00;
+  }
+  .step-num {
+    font-size: 20px;
+    font-weight: 900;
+    color: #ff5a00;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 24px;
+  }
+  .step-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #ff5a00;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 3px;
+  }
+  .step-text {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.55;
+  }
+  .step-text strong { color: #111; font-weight: 600; }
+
+  /* ── BULLETS dentro dos steps ── */
+  .bullet-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .bullet-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.5;
+  }
+  .bullet-item::before {
+    content: '—';
+    color: #ff5a00;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .bullet-item strong { color: #111; font-weight: 600; }
+
+  /* ── WIRE TAG (fio laranja / fio amarelo) ── */
+  .wire-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .wire-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid;
+  }
+  .wire-tag .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .wire-orange { color: #c45000; border-color: rgba(196,80,0,0.3); background: rgba(255,90,0,0.06); }
+  .wire-orange .dot { background: #ff5a00; }
+  .wire-yellow { color: #8a6800; border-color: rgba(200,160,0,0.3); background: rgba(255,210,0,0.08); }
+  .wire-yellow .dot { background: #f0c000; }
+
+  /* ── CALLOUT (aviso genérico) ── */
+  .callout {
+    margin-left: 56px;
+    background: #fff8f4;
+    border: 1.5px solid rgba(255,90,0,0.25);
+    border-radius: 10px;
+    padding: 18px 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+  .callout-icon { font-size: 22px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .callout-title { font-size: 13.5px; font-weight: 700; color: #111; margin-bottom: 5px; }
+  .callout-text { font-size: 13px; color: #555; line-height: 1.6; }
+
+  /* ── WARNING (atenção crítico) ── */
+  .warning {
+    margin-left: 56px;
+    background: #fffbf0;
+    border: 1.5px solid rgba(200,140,0,0.3);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+  .warning-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+  .warning-text { font-size: 13px; color: #555; line-height: 1.6; }
+  .warning-text strong { color: #333; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: #0a0a0a;
+    padding: 22px 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 48px;
+  }
+  .footer-tagline { font-size: 11px; color: #555; margin-top: 4px; letter-spacing: 0.5px; }
+
+  /* ── PRINT ── */
+  @page { size: A4; margin: 0; }
+
+  @media print {
+    body { background: none; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; width: 100%; }
+    .section-break { break-before: page; page-break-before: always; padding-top: 40px; }
+    .callout, .warning, .step { break-inside: avoid; page-break-inside: avoid; }
+    .section-header { break-after: avoid; page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-inner">
+      <div>
+        <img src="logo_clippa_oficial.png" height="54" alt="Clippa" style="filter:invert(1); mix-blend-mode:screen;">
+      </div>
+      <div class="header-title-block">
+        <div class="header-badge">● Instalação Técnica</div>
+        <div class="header-title">Guia de Instalação</div>
+        <div class="header-sub">Sistema de Câmeras — Eletricista responsável</div>
+      </div>
+    </div>
+    <div class="header-bar"></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <p>Siga este guia passo a passo para garantir uma instalação correta do sistema de câmeras.
+    Execute cada etapa na ordem indicada e, qualquer dúvida, entre em contato com nossa equipe de suporte.</p>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- KIT -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number" style="font-size:13px; font-weight:900; letter-spacing:0.5px;">KIT</div>
+        <div class="section-title">Itens do Kit</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">Verifique se todos os itens abaixo estão presentes antes de iniciar a instalação.</p>
+      <div class="checklist">
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Câmeras</span><span class="check-qty">×4</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Cartões de memória</span><span class="check-qty">×4</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Relés</span><span class="check-qty">×4</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Fontes</span><span class="check-qty">×4</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Botões / Botoeiras</span><span class="check-qty">×4</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Switch PoE</span><span class="check-qty">×1</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <div class="section-title">Instalação dos Cartões de Memória</div>
+        <div class="section-rule"></div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Separar</div>
+            <div class="step-text">Pegue os <strong>4 cartões de memória</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Inserir</div>
+            <div class="step-text">Instale <strong>1 cartão dentro de cada câmera</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-label">Verificar</div>
+            <div class="step-text">Confirme que o cartão ficou <strong>corretamente encaixado</strong> em cada câmera.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <div class="section-title">Ligação dos Relés e Fontes</div>
+        <div class="section-rule"></div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Conectar</div>
+            <div class="step-text">Pegue uma fonte e conecte-a em um relé. <strong>Repita individualmente para os 4 relés.</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Confirmar</div>
+            <div class="step-text">Após conectar cada fonte, confirme que o <strong>relé energizou corretamente</strong>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="section section-break">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <div class="section-title">Ligação dos Fios do Relé na Câmera</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">Cada relé possui dois fios que devem ser conectados na entrada <strong>ALARM IN</strong> da câmera.</p>
+
+      <div style="padding-left: 56px; margin-bottom: 12px;">
+        <div class="wire-tags">
+          <div class="wire-tag wire-yellow"><div class="dot"></div>Fio amarelo</div>
+          <div class="wire-tag wire-orange"><div class="dot"></div>Fio laranja</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-icon">📌</div>
+        <div>
+          <div class="callout-title">Como conectar corretamente</div>
+          <div class="callout-text">
+            A câmera possui um borne com <strong>4 entradas</strong>. Utilize somente a <strong>1ª e a 2ª entrada</strong> — nunca coloque os dois fios na mesma entrada.
+            <div class="bullet-list" style="margin-top: 8px;">
+              <div class="bullet-item"><div class="wire-tag wire-yellow" style="padding: 2px 8px; font-size:11px;"><div class="dot"></div>Fio amarelo</div> → 1ª entrada</div>
+              <div class="bullet-item"><div class="wire-tag wire-orange" style="padding: 2px 8px; font-size:11px;"><div class="dot"></div>Fio laranja</div> → 2ª entrada</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-text">Como os fios do relé são <strong>curtos</strong>, a câmera deve ser instalada <strong>próxima ao seu respectivo relé</strong>.</div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <div class="section-title">Configuração dos Botões nos Relés</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">Cada botão deve ser cadastrado no seu respectivo relé. Repita o processo para os 4 conjuntos.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Energizar</div>
+            <div class="step-text">Deixe o <strong>relé ligado na energia</strong> com a fonte conectada.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Iniciar cadastro</div>
+            <div class="step-text">Aperte o botão <strong>PROG do relé</strong> uma vez.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-label">Cadastrar botoeira</div>
+            <div class="step-text">Aperte o <strong>botão da botoeira</strong> que será vinculada àquele relé.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-label">Finalizar</div>
+            <div class="step-text">Aperte novamente o botão <strong>PROG</strong> para concluir o cadastro.</div>
+          </div>
+        </div>
+      </div>
+      <div class="callout" style="margin-top: 12px;">
+        <div class="callout-icon">🔁</div>
+        <div>
+          <div class="callout-title">Repita para os 4 conjuntos</div>
+          <div class="callout-text">Cada botão deve ficar vinculado <strong>apenas ao seu respectivo relé</strong>. Não misture os pares.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 5, 6, 7 + FOOTER agrupados -->
+  <div style="break-inside: avoid; page-break-inside: avoid; padding: 0 52px;">
+
+    <!-- STEP 5 -->
+    <div class="section section-break">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <div class="section-title">Instalação do Switch PoE</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">O switch PoE fornece energia e rede para todas as câmeras simultaneamente.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Conectar câmeras</div>
+            <div class="step-text">Conecte cada câmera ao switch utilizando os <strong>cabos de rede</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Alimentação automática</div>
+            <div class="step-text">As <strong>portas PoE do switch</strong> irão alimentar as câmeras automaticamente via cabo de rede.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <div class="section-title">Ligação da Internet no Switch</div>
+        <div class="section-rule"></div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Localizar porta UPLINK</div>
+            <div class="step-text">Identifique a <strong>porta UPLINK</strong> no switch.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Conectar roteador</div>
+            <div class="step-text">Pegue o <strong>cabo de rede vindo do roteador</strong> e conecte-o na porta UPLINK — o switch distribuirá internet para todas as câmeras automaticamente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <div class="section-title">Testes Finais</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">Após concluir todas as etapas, realize os seguintes testes antes de finalizar.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-label">Botões</div>
+            <div class="step-text">Testar os <strong>4 botões</strong> e confirmar o acionamento correto dos 4 relés (deve emitir um som de relé acionado).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-label">Switch</div>
+            <div class="step-text">Verificar se <strong>todas as portas do switch</strong> indicam sinal de energia e internet.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-label">Alarm In</div>
+            <div class="step-text">Confirmar se os fios do <strong>ALARM IN</strong> estão corretamente conectados em todas as câmeras.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>
+        <img src="logo_clippa_oficial.png" height="28" alt="Clippa" style="display:block;margin-bottom:6px;filter:invert(1);mix-blend-mode:screen;">
+        <div class="footer-tagline">Inteligência esportiva</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

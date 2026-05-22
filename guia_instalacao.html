@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Instalação — Clippa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f0f0f0;
+    color: #111;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .page {
+    width: 794px;
+    background: #fff;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.18);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #0a0a0a;
+    padding: 44px 52px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,90,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,90,0,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-block {
+    display: flex;
+    align-items: center;
+  }
+
+  .header-title-block {
+    text-align: right;
+  }
+
+  .header-badge {
+    display: inline-block;
+    border: 1px solid rgba(255,90,0,0.5);
+    color: #ff5a00;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  .header-bar {
+    height: 4px;
+    background: #ff5a00;
+    margin-top: 32px;
+  }
+
+  /* ── INTRO ── */
+  .intro {
+    padding: 36px 52px 28px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .intro p {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #444;
+    font-weight: 400;
+  }
+
+  .intro strong {
+    color: #111;
+    font-weight: 600;
+  }
+
+  /* ── BODY ── */
+  .body {
+    padding: 0 52px 52px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-top: 40px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .section-number {
+    width: 40px;
+    height: 40px;
+    background: #ff5a00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.2px;
+  }
+
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: #eee;
+  }
+
+  .section-desc {
+    font-size: 13.5px;
+    color: #777;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding-left: 56px;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist {
+    padding-left: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f9f9f9;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ff5a00;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+
+  .check-label {
+    font-size: 13.5px;
+    color: #222;
+    font-weight: 500;
+  }
+
+  /* ── STEPS ── */
+  .steps {
+    padding-left: 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border-left: 3px solid #ff5a00;
+  }
+
+  .step-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: #ff5a00;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 28px;
+  }
+
+  .step-content {}
+
+  .step-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff5a00;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 3px;
+  }
+
+  .step-text {
+    font-size: 13.5px;
+    color: #333;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+
+  .step-text strong {
+    color: #111;
+    font-weight: 600;
+  }
+
+  /* ── SUPPORT CALLOUT ── */
+  .callout {
+    margin-left: 56px;
+    background: #fff8f4;
+    border: 1.5px solid rgba(255,90,0,0.25);
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .callout-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  .callout-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 6px;
+  }
+
+  .callout-text {
+    font-size: 13.5px;
+    color: #555;
+    line-height: 1.65;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: #0a0a0a;
+    padding: 24px 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 52px;
+  }
+
+  .footer-logo {
+    font-size: 14px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 4px;
+  }
+
+  .footer-logo span {
+    color: #ff5a00;
+  }
+
+  .footer-tagline {
+    font-size: 11px;
+    color: #555;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-support-label {
+    font-size: 10px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 3px;
+  }
+
+  .footer-support-contact {
+    font-size: 12px;
+    color: #ff5a00;
+    font-weight: 600;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  @media print {
+    body { background: none; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; width: 100%; }
+    .section-break { break-before: page; page-break-before: always; padding-top: 40px; }
+    .callout { break-inside: avoid; page-break-inside: avoid; }
+    .step { break-inside: avoid; page-break-inside: avoid; }
+    .section-header { break-after: avoid; page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo-block">
+        <img src="logo_clippa_oficial.png" height="54" alt="Clippa" style="filter:invert(1); mix-blend-mode:screen;">
+      </div>
+      <div class="header-title-block">
+        <div class="header-badge">● Instalação Técnica</div>
+        <div class="header-title">Guia de Instalação</div>
+        <div class="header-sub">Instruções para o Eletricista responsável</div>
+      </div>
+    </div>
+    <div class="header-bar"></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <p>
+      Para garantir uma instalação tranquila e sem imprevistos,
+      preparamos este guia passo a passo. Siga a sequência com atenção —
+      nossa equipe de suporte estará disponível durante todo o processo para ajudar.
+    </p>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- SECTION 1 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <div class="section-title">Verificação dos Equipamentos</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">Ao abrir a caixa, confirme que todos os itens abaixo estão presentes antes de iniciar qualquer conexão.</p>
+      <div class="checklist">
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Botões</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Caixa hermética</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Switch</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Filtro de linha</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Placa controladora</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Servidor</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Banners</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Câmeras</span></div>
+        <div class="check-item"><div class="check-box"></div><span class="check-label">Cabo micro USB branco</span></div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <div class="section-title">Avise-nos ao Receber os Equipamentos</div>
+        <div class="section-rule"></div>
+      </div>
+      <div class="callout">
+        <div class="callout-icon">📦</div>
+        <div>
+          <div class="callout-title">Lembre-se de nos avisar quando os equipamentos chegarem!</div>
+          <div class="callout-text">
+            Assim que o pedido chegar, entre em contato com nossa equipe. Dessa forma, conseguimos
+            nos organizar e agendar o acompanhamento remoto da instalação — garantindo que tudo
+            ocorra de forma tranquila e sem imprevistos.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section section-break">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <div class="section-title">Instalação dos Equipamentos</div>
+        <div class="section-rule"></div>
+      </div>
+      <p class="section-desc">Com tudo conferido, realize as conexões exatamente na ordem abaixo.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-label">Cabo USB</div>
+            <div class="step-text">Conecte o <strong>cabo micro USB branco</strong> na parte frontal do servidor.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-label">Energia do Servidor</div>
+            <div class="step-text">Conecte o <strong>cabo de energia</strong> ao servidor.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-label">Energia da Caixa Hermética</div>
+            <div class="step-text">Conecte o <strong>cabo de energia que sai da caixa hermética</strong> à tomada.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-label">Câmeras no Switch</div>
+            <div class="step-text">Ligue os cabos das câmeras nas <strong>portas POE do switch</strong> (dentro da caixa hermética).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-label">Rede no Servidor</div>
+            <div class="step-text">Ligue um <strong>cabo de rede</strong> na parte traseira do servidor.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-label">Rede no Switch</div>
+            <div class="step-text">Ligue um cabo de rede na <strong>porta UPLINK do switch</strong> — atenção: <strong>não</strong> nas portas POE.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 4 + FOOTER agrupados para nunca separar -->
+  <div style="break-inside: avoid; page-break-inside: avoid; padding: 0 52px;">
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <div class="section-title">Aviso ao Suporte</div>
+        <div class="section-rule"></div>
+      </div>
+      <div class="callout">
+        <div class="callout-icon">🤝</div>
+        <div>
+          <div class="callout-title">Nos avise assim que iniciar a instalação!</div>
+          <div class="callout-text">
+            Nossa equipe de suporte estará disponível para acompanhar o processo e auxiliar
+            em caso de dúvidas ou imprevistos. Qualquer problema, estamos à disposição.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>
+        <img src="logo_clippa_oficial.png" height="28" alt="Clippa" style="display:block;margin-bottom:6px;filter:invert(1);mix-blend-mode:screen;">
+        <div class="footer-tagline">Inteligência esportiva</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
