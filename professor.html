@@ -106,25 +106,73 @@
     .agenda-slot-tag button { background: none; border: none; cursor: pointer; color: var(--orange); font-size: 14px; line-height: 1; padding: 0; }
 
     /* RESERVAS */
-    .reserva-row { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--gray-50); }
+    /* RESERVA CALENDAR EVENTS */
+    .res-event { position: absolute; left: 3px; right: 3px; border-radius: 6px; padding: 4px 7px; cursor: pointer; overflow: hidden; transition: filter .15s; z-index: 2; }
+    .res-event:hover { filter: brightness(.92); }
+    .res-event.pendente { background: #FEF3C7; border-left: 3px solid #F59E0B; }
+    .res-event.confirmada { background: #D1FAE5; border-left: 3px solid var(--green); }
+    .res-event.recusada { background: #FEE2E2; border-left: 3px solid #EF4444; }
+    .res-event.cancelada { background: var(--gray-100); border-left: 3px solid var(--gray-300); }
+    .res-event-name { font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .res-event.pendente .res-event-name { color: #92400E; }
+    .res-event.confirmada .res-event-name { color: #065F46; }
+    .res-event.recusada .res-event-name { color: #991B1B; }
+    .res-event.cancelada .res-event-name { color: var(--gray-500); }
+    .res-event-sub { font-size: 10px; opacity: .75; }
+    /* RESERVA LIST */
+    .reserva-list { display: flex; flex-direction: column; }
+    .reserva-row { display: flex; align-items: center; gap: 14px; padding: 13px 20px; border-bottom: 1px solid var(--gray-50); cursor: pointer; transition: background .12s; position: relative; }
     .reserva-row:last-child { border-bottom: none; }
-    .reserva-date { text-align: center; min-width: 44px; flex-shrink: 0; }
-    .reserva-date-day { font-size: 20px; font-weight: 700; color: var(--gray-900); line-height: 1; }
-    .reserva-date-mon { font-size: 10px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; }
-    .reserva-divider { width: 1px; height: 40px; background: var(--gray-100); flex-shrink: 0; }
-    .reserva-time { font-size: 15px; font-weight: 700; color: var(--gray-800); min-width: 54px; }
-    .reserva-info { flex: 1; min-width: 0; }
-    .reserva-student { font-size: 14px; font-weight: 600; color: var(--gray-800); }
-    .reserva-detail { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
-    .reserva-status { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
-    .status-pendente { background: #FEF3C7; color: #D97706; }
-    .status-confirmada { background: #D1FAE5; color: #065F46; }
-    .status-recusada { background: #FEE2E2; color: #991B1B; }
-    .status-cancelada { background: var(--gray-100); color: var(--gray-500); }
-    .reserva-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .btn-confirmar { background: var(--green); color: white; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .15s; }
-    .btn-recusar { background: white; color: var(--red); border: 1px solid var(--red); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .15s; }
-    .btn-wpp { background: #25D366; color: white; border: none; border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .reserva-row:hover { background: var(--gray-50); }
+    .reserva-row::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; }
+    .reserva-row.pendente::before { background: #F59E0B; }
+    .reserva-row.confirmada::before { background: var(--green); }
+    .reserva-row.recusada::before { background: #EF4444; }
+    .reserva-row.cancelada::before { background: var(--gray-300); }
+    .reserva-avatar { width: 34px; height: 34px; border-radius: 9px; color: white; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .reserva-main { flex: 1; min-width: 0; }
+    .reserva-name { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+    .reserva-meta { display: flex; align-items: center; gap: 8px; margin-top: 2px; flex-wrap: wrap; }
+    .reserva-time-text { font-size: 12px; color: var(--gray-400); }
+    .reserva-type-tag { display: inline-flex; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 700; }
+    .r-status { padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .r-status.pendente { background: #FEF3C7; color: #D97706; }
+    .r-status.confirmada { background: #D1FAE5; color: #065F46; }
+    .r-status.recusada { background: #FEE2E2; color: #991B1B; }
+    .r-status.cancelada { background: var(--gray-100); color: var(--gray-500); }
+    .btn-wpp-sm { background: #25D366; color: white; border: none; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s; }
+    .btn-wpp-sm:hover { background: #1da851; }
+    .btn-wpp-sm svg { width: 15px; height: 15px; fill: white; }
+    /* RESERVA DETAIL MODAL */
+    .reserva-modal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .reserva-modal-avatar { width: 48px; height: 48px; border-radius: 13px; color: white; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .reserva-modal-info h3 { font-size: 18px; font-weight: 700; }
+    .reserva-modal-info p { font-size: 13px; color: var(--gray-400); margin-top: 3px; }
+    .reserva-detail-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gray-50); font-size: 13px; color: var(--gray-700); }
+    .reserva-detail-row:last-of-type { border-bottom: none; }
+    .reserva-detail-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+    .reserva-detail-label { color: var(--gray-400); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+    .status-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .status-btn { padding: 10px 8px; border-radius: 10px; border: 2px solid transparent; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center; transition: .15s; }
+    .status-btn.confirmar { background: #D1FAE5; color: #065F46; border-color: #6EE7B7; }
+    .status-btn.confirmar:hover { background: var(--green); color: white; }
+    .status-btn.recusar { background: #FEE2E2; color: #991B1B; border-color: #FCA5A5; }
+    .status-btn.recusar:hover { background: #EF4444; color: white; }
+    .status-btn.cancelar { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
+    .status-btn.cancelar:hover { background: var(--gray-200); }
+    .status-btn.active-status { opacity: .45; cursor: default; pointer-events: none; }
+    .btn-wpp-big { background: #25D366; color: white; border: none; border-radius: 12px; padding: 13px 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 16px; transition: background .15s; }
+    .btn-wpp-big:hover { background: #1da851; }
+    .btn-wpp-big svg { width: 18px; height: 18px; fill: white; flex-shrink: 0; }
+    /* WPP PROMPT */
+    .wpp-prompt-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 300; align-items: flex-end; justify-content: center; padding: 0; }
+    .wpp-prompt-overlay.open { display: flex; }
+    .wpp-prompt-sheet { background: white; border-radius: 24px 24px 0 0; padding: 28px 24px 40px; width: 100%; max-width: 520px; animation: slideUp .25s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .wpp-prompt-icon { font-size: 44px; text-align: center; margin-bottom: 10px; }
+    .wpp-prompt-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+    .wpp-prompt-sub { font-size: 13px; color: var(--gray-400); text-align: center; margin-bottom: 18px; }
+    .wpp-msg-preview { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--gray-700); line-height: 1.6; white-space: pre-wrap; margin-bottom: 18px; }
 
     /* DISTRIB */
     .distrib-wrap { display: flex; align-items: center; gap: 24px; padding: 16px 22px 20px; }
@@ -200,6 +248,100 @@
       .fin-summary { grid-template-columns: repeat(2, 1fr); }
       .prof-header-bar { padding: 16px 16px 0; }
     }
+
+    /* WEEK CALENDAR VIEW */
+    .cal-wrap { overflow-x: auto; border-radius: 0 0 16px 16px; }
+    .cal-nav { display: flex; align-items: center; gap: 12px; padding: 14px 20px 12px; border-bottom: 1px solid var(--gray-100); }
+    .cal-nav-btn { background: none; border: 1px solid var(--gray-200); border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: 15px; color: var(--gray-500); transition: .15s; }
+    .cal-nav-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .cal-nav-label { font-size: 14px; font-weight: 700; color: var(--gray-800); flex: 1; }
+    .cal-nav-today { font-size: 12px; font-weight: 600; padding: 5px 12px; border: 1px solid var(--gray-200); border-radius: 8px; cursor: pointer; color: var(--gray-600); background: white; transition: .15s; }
+    .cal-nav-today:hover { border-color: var(--orange); color: var(--orange); }
+    .cal-inner { display: flex; min-width: 620px; }
+    .cal-time-col { width: 52px; flex-shrink: 0; padding-top: 56px; }
+    .cal-time-label { height: 44px; display: flex; align-items: flex-start; justify-content: flex-end; padding-right: 10px; font-size: 10px; font-weight: 500; color: var(--gray-400); transform: translateY(-7px); }
+    .cal-days { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-day-col { border-left: 1px solid var(--gray-100); display: flex; flex-direction: column; }
+    .cal-day-col:first-child { border-left: none; }
+    .cal-day-header { text-align: center; padding: 8px 4px 8px; border-bottom: 1px solid var(--gray-200); position: sticky; top: 0; background: white; z-index: 5; height: 58px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .cal-day-name { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; }
+    .cal-day-num { font-size: 20px; font-weight: 700; color: var(--gray-700); line-height: 1; margin-top: 3px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .cal-day-num.today { background: var(--orange); color: white; font-size: 17px; }
+    .cal-day-body { position: relative; }
+    .cal-hour-line { position: absolute; left: 0; right: 0; border-top: 1px solid var(--gray-100); pointer-events: none; }
+    .cal-hour-half { position: absolute; left: 0; right: 0; border-top: 1px dashed #F3F4F6; pointer-events: none; }
+    .cal-event { position: absolute; left: 3px; right: 3px; border-radius: 6px; padding: 4px 6px; overflow: hidden; cursor: pointer; transition: filter .15s; z-index: 2; }
+    .cal-event:hover { filter: brightness(.93); }
+    .cal-event.available { background: var(--orange-light); border-left: 3px solid var(--orange); }
+    .cal-event.blocked { background: #FEE2E2; border-left: 3px solid #EF4444; }
+    .cal-event.extra { background: #D1FAE5; border-left: 3px solid var(--green); }
+    .cal-event-title { font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cal-event.available .cal-event-title { color: var(--orange-dark); }
+    .cal-event.blocked .cal-event-title { color: #991B1B; }
+    .cal-event.extra .cal-event-title { color: #065F46; }
+    .cal-event-sub { font-size: 10px; opacity: .75; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cal-event.available .cal-event-sub { color: var(--orange); }
+    .cal-event.blocked .cal-event-sub { color: #DC2626; }
+    .cal-event.extra .cal-event-sub { color: var(--green); }
+    .cal-fullday-block { background: #FEE2E2; border-left: 3px solid #EF4444; padding: 5px 8px; margin: 0 3px 4px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #991B1B; cursor: pointer; }
+    .cal-fullday-block:hover { filter: brightness(.93); }
+    .cal-click-overlay { position: absolute; inset: 0; z-index: 1; cursor: crosshair; }
+
+    /* DOW / SLOT PILLS */
+    .dow-pill, .slot-pill { padding: 8px 4px; border: 1.5px solid var(--gray-200); border-radius: 9px; background: white; font-size: 12px; font-weight: 600; color: var(--gray-500); cursor: pointer; text-align: center; transition: .15s; }
+    .dow-pill:hover, .slot-pill:hover { border-color: var(--orange); color: var(--orange); }
+    .dow-pill.active, .slot-pill.active { background: var(--orange); border-color: var(--orange); color: white; }
+
+    /* Inline add slot form (inside modal) */
+    .day-add-form { background: var(--gray-50); padding: 10px; display: none; flex-direction: column; gap: 7px; border-top: 1px solid var(--gray-100); }
+    .day-add-form.open { display: flex; }
+    .day-form-label { font-size: 10px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+    .day-form-row { display: flex; gap: 6px; }
+    .day-form-save { background: var(--orange); color: white; border: none; border-radius: 7px; padding: 7px 10px; font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; }
+    .day-form-cancel { background: var(--gray-100); color: var(--gray-500); border: none; border-radius: 7px; padding: 7px 10px; font-size: 11px; cursor: pointer; }
+
+    @media (max-width: 760px) { .cal-days { grid-template-columns: repeat(4, 1fr); } }
+
+    /* PONTUAL TYPE TOGGLE */
+    .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .type-toggle-btn { padding: 14px 10px; border: 2px solid var(--gray-200); border-radius: 14px; background: white; cursor: pointer; text-align: center; transition: .15s; }
+    .type-toggle-btn:hover { border-color: var(--gray-400); }
+    .type-toggle-btn.selected-block { border-color: #EF4444; background: #FEF2F2; }
+    .type-toggle-btn.selected-extra { border-color: var(--green); background: #F0FDF4; }
+    .tt-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+    .tt-label { font-size: 13px; font-weight: 700; display: block; color: var(--gray-700); }
+    .tt-desc { font-size: 11px; color: var(--gray-400); display: block; margin-top: 3px; }
+    .type-toggle-btn.selected-block .tt-label { color: #DC2626; }
+    .type-toggle-btn.selected-extra .tt-label { color: var(--green); }
+
+    /* MINI CALENDAR */
+    .mini-cal { background: var(--gray-50); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+    .mini-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .mini-cal-nav h3 { font-size: 13px; font-weight: 700; text-transform: capitalize; }
+    .mini-cal-nav-btn { background: none; border: 1px solid var(--gray-200); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 13px; color: var(--gray-500); transition: .15s; }
+    .mini-cal-nav-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .mini-cal-dh { text-align: center; font-size: 10px; font-weight: 600; color: var(--gray-400); padding: 4px 0; }
+    .mini-cal-d { text-align: center; padding: 7px 2px; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--gray-700); transition: .1s; width: 100%; }
+    .mini-cal-d:hover:not(:disabled) { background: var(--orange-light); color: var(--orange); }
+    .mini-cal-d.selected { background: var(--orange); color: white; font-weight: 700; }
+    .mini-cal-d:disabled { color: var(--gray-200); cursor: not-allowed; }
+    .mini-cal-d.other-m { color: var(--gray-300); }
+    .date-display { text-align: center; font-size: 13px; font-weight: 600; color: var(--gray-700); padding: 9px 14px; background: white; border-radius: 8px; border: 1.5px solid var(--orange); margin-top: 10px; }
+    .date-display.empty { border-color: var(--gray-200); color: var(--gray-400); font-weight: 400; }
+
+    /* PONTUAL LIST */
+    .exc-card { display: flex; align-items: center; gap: 14px; padding: 14px 22px; border-bottom: 1px solid var(--gray-50); }
+    .exc-card:last-child { border-bottom: none; }
+    .exc-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .exc-icon.block { background: #FEF2F2; }
+    .exc-icon.extra { background: #F0FDF4; }
+    .exc-info { flex: 1; min-width: 0; }
+    .exc-date { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+    .exc-detail { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+    .exc-badge { padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .exc-badge.block { background: #FEE2E2; color: #991B1B; }
+    .exc-badge.extra { background: #D1FAE5; color: #065F46; }
   </style>
 </head>
 <body>
@@ -451,46 +593,72 @@
 
   <!-- ── TAB: AGENDA ── -->
   <div id="tab-agenda" style="display:none">
-
-    <!-- Agenda Padrão -->
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-header">
-        <h2>Agenda Padrão</h2>
-        <span style="font-size:12px;color:var(--gray-400)">Horários recorrentes toda semana</span>
+    <div class="card" style="margin-bottom:0">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeCalWeek(-1)">‹</button>
+        <button class="cal-nav-btn" onclick="changeCalWeek(1)">›</button>
+        <span class="cal-nav-label" id="calWeekLabel">—</span>
+        <button class="cal-nav-today" onclick="gotoCurrentWeek()">Hoje</button>
+        <button class="btn btn-outline" onclick="openAddDiaModal()" style="font-size:12px;padding:5px 14px;display:flex;align-items:center;gap:6px"><span style="font-size:14px">↻</span> Horário padrão</button>
+        <button class="btn btn-primary" onclick="openAddPontualModal()" style="font-size:12px;padding:5px 14px">+ Exceção</button>
       </div>
-      <div style="padding:0 22px 20px" id="agendaPadraoWrap">
-        <div class="loading"><span class="spinner"></span>Carregando...</div>
-      </div>
-      <div style="padding:0 22px 20px" id="addDiaWrap" style="display:none">
-        <button class="btn btn-outline" onclick="openAddDiaModal()" style="width:100%;justify-content:center">+ Adicionar dia</button>
-      </div>
-    </div>
-
-    <!-- Agenda Pontual -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Exceções Pontuais</h2>
-        <button class="btn btn-outline" onclick="openAddPontualModal()">+ Adicionar</button>
-      </div>
-      <div id="agendaPontualWrap">
-        <div class="loading"><span class="spinner"></span>Carregando...</div>
+      <div class="cal-wrap">
+        <div class="cal-inner">
+          <div class="cal-time-col" id="calTimeCol"></div>
+          <div class="cal-days" id="calDaysCols"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ── TAB: RESERVAS ── -->
   <div id="tab-reservas" style="display:none">
-    <div class="filter-bar" style="margin-top:4px">
-      <div class="period-group">
-        <span class="period-label">Status:</span>
-        <button class="period-pill active" onclick="setReservaFilter('todas', this)">Todas</button>
-        <button class="period-pill" onclick="setReservaFilter('pendente', this)">Pendentes</button>
-        <button class="period-pill" onclick="setReservaFilter('confirmada', this)">Confirmadas</button>
-        <button class="period-pill" onclick="setReservaFilter('recusada', this)">Recusadas</button>
-        <button class="period-pill" onclick="setReservaFilter('cancelada', this)">Canceladas</button>
+
+    <!-- Link de reservas -->
+    <div style="background:white;border:1px solid var(--gray-200);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Link para os alunos agendarem</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input id="bookingLinkInput" readonly style="flex:1;min-width:0;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:12px;color:var(--gray-700);background:var(--gray-50);font-family:inherit;outline:none;cursor:text" value="—">
+          <button onclick="copyBookingLink()" id="copyLinkBtn" style="padding:8px 16px;background:var(--orange);color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;flex-shrink:0">Copiar link</button>
+        </div>
       </div>
     </div>
+
+    <!-- Calendário de reservas -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeResWeek(-1)">‹</button>
+        <button class="cal-nav-btn" onclick="changeResWeek(1)">›</button>
+        <span class="cal-nav-label" id="resWeekLabel">—</span>
+        <button class="cal-nav-today" onclick="gotoCurrentResWeek()">Hoje</button>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#92400E"><span style="width:10px;height:10px;background:#F59E0B;border-radius:3px;display:inline-block"></span>Pendente</span>
+          <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#065F46"><span style="width:10px;height:10px;background:var(--green);border-radius:3px;display:inline-block"></span>Confirmada</span>
+          <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#991B1B"><span style="width:10px;height:10px;border-radius:3px;background:#EF4444;display:inline-block;flex-shrink:0"></span>Recusada</span>
+          <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#6B7280"><span style="width:10px;height:10px;border-radius:3px;background:#9CA3AF;display:inline-block;flex-shrink:0"></span>Cancelada</span>
+        </div>
+      </div>
+      <div class="cal-wrap">
+        <div class="cal-inner">
+          <div class="cal-time-col" id="resTimeCol"></div>
+          <div class="cal-days" id="resDaysCols"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de reservas -->
     <div class="card">
+      <div class="card-header">
+        <h2>Lista de Reservas</h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="period-pill active" onclick="setReservaFilter('todas', this)">Todas</button>
+          <button class="period-pill" onclick="setReservaFilter('pendente', this)">Pendentes</button>
+          <button class="period-pill" onclick="setReservaFilter('confirmada', this)">Confirmadas</button>
+          <button class="period-pill" onclick="setReservaFilter('recusada', this)">Recusadas</button>
+          <button class="period-pill" onclick="setReservaFilter('cancelada', this)">Canceladas</button>
+        </div>
+      </div>
       <div id="reservasWrap"><div class="loading"><span class="spinner"></span>Carregando...</div></div>
     </div>
   </div>
@@ -536,22 +704,35 @@
   </div>
 </div>
 
-<!-- MODAL: Adicionar Dia Agenda Padrão -->
+<!-- MODAL: Adicionar Disponibilidade Recorrente -->
 <div class="modal-overlay" id="diaModal">
   <div class="modal">
-    <h2>Configurar Dia</h2>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--orange-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">↻</div>
+      <div>
+        <h2 style="margin-bottom:0">Horário Padrão</h2>
+        <p style="font-size:12px;color:var(--gray-400);margin-top:2px">Repete toda semana automaticamente</p>
+      </div>
+    </div>
+
+    <div style="background:var(--orange-light);border:1px solid #FED7AA;border-radius:10px;padding:10px 14px;margin-bottom:20px;font-size:12px;color:var(--orange-dark)">
+      💡 Use isto para os dias e horários que você atende normalmente toda semana.
+    </div>
+
     <div class="form-group">
       <label class="form-label">Dia da Semana</label>
-      <select class="form-input" id="diaDow">
-        <option value="1">Segunda-feira</option>
-        <option value="2">Terça-feira</option>
-        <option value="3">Quarta-feira</option>
-        <option value="4">Quinta-feira</option>
-        <option value="5">Sexta-feira</option>
-        <option value="6">Sábado</option>
-        <option value="0">Domingo</option>
-      </select>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px" id="dowPills">
+        <button type="button" class="dow-pill" data-dow="1" onclick="selectDow(1)">Seg</button>
+        <button type="button" class="dow-pill" data-dow="2" onclick="selectDow(2)">Ter</button>
+        <button type="button" class="dow-pill" data-dow="3" onclick="selectDow(3)">Qua</button>
+        <button type="button" class="dow-pill" data-dow="4" onclick="selectDow(4)">Qui</button>
+        <button type="button" class="dow-pill" data-dow="5" onclick="selectDow(5)">Sex</button>
+        <button type="button" class="dow-pill" data-dow="6" onclick="selectDow(6)">Sáb</button>
+        <button type="button" class="dow-pill" data-dow="0" onclick="selectDow(0)">Dom</button>
+      </div>
+      <input type="hidden" id="diaDow" value="1">
     </div>
+
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Início</label>
@@ -563,17 +744,18 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Duração do slot</label>
-      <select class="form-input" id="diaSlot">
-        <option value="30">30 minutos</option>
-        <option value="60" selected>1 hora</option>
-        <option value="90">1h30</option>
-        <option value="120">2 horas</option>
-      </select>
+      <label class="form-label">Duração de cada slot</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px" id="slotPills">
+        <button type="button" class="slot-pill" data-val="30" onclick="selectSlot(30)">30 min</button>
+        <button type="button" class="slot-pill active" data-val="60" onclick="selectSlot(60)">1 hora</button>
+        <button type="button" class="slot-pill" data-val="90" onclick="selectSlot(90)">1h30</button>
+        <button type="button" class="slot-pill" data-val="120" onclick="selectSlot(120)">2h</button>
+      </div>
+      <input type="hidden" id="diaSlot" value="60">
     </div>
     <div class="modal-footer">
       <button class="btn btn-cancel" onclick="closeDiaModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveDia()">Salvar</button>
+      <button class="btn btn-primary" onclick="saveDia()">↻ Salvar padrão</button>
     </div>
   </div>
 </div>
@@ -582,19 +764,36 @@
 <div class="modal-overlay" id="pontualModal">
   <div class="modal">
     <h2>Exceção Pontual</h2>
-    <div class="form-group">
-      <label class="form-label">Tipo</label>
-      <select class="form-input" id="pontualType" onchange="onPontualTypeChange()">
-        <option value="bloqueado">Bloquear dia/horário (não vou atender)</option>
-        <option value="disponivel">Adicionar disponibilidade extra</option>
-      </select>
+
+    <!-- Tipo -->
+    <div class="type-toggle">
+      <button class="type-toggle-btn selected-block" id="ttBlock" onclick="selectPontualType('bloqueado')">
+        <span class="tt-label">Bloquear</span>
+        <span class="tt-desc">Não vou atender neste dia</span>
+      </button>
+      <button class="type-toggle-btn" id="ttExtra" onclick="selectPontualType('disponivel')">
+        <span class="tt-label">Horário extra</span>
+        <span class="tt-desc">Só nesta data, não toda semana</span>
+      </button>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Data</label>
-        <input type="date" class="form-input" id="pontualDate">
+
+    <!-- Mini calendário -->
+    <div class="mini-cal">
+      <div class="mini-cal-nav">
+        <button class="mini-cal-nav-btn" onclick="changePontualMonth(-1)">‹</button>
+        <h3 id="pontualCalLabel">—</h3>
+        <button class="mini-cal-nav-btn" onclick="changePontualMonth(1)">›</button>
       </div>
+      <div class="mini-cal-grid">
+        <div class="mini-cal-dh">Dom</div><div class="mini-cal-dh">Seg</div><div class="mini-cal-dh">Ter</div>
+        <div class="mini-cal-dh">Qua</div><div class="mini-cal-dh">Qui</div><div class="mini-cal-dh">Sex</div>
+        <div class="mini-cal-dh">Sáb</div>
+      </div>
+      <div class="mini-cal-grid" id="pontualCalDays"></div>
+      <div class="date-display empty" id="pontualDateDisplay">Selecione uma data</div>
     </div>
+
+    <!-- Horário (opcional) -->
     <div id="pontualTimeGroup">
       <div class="form-row">
         <div class="form-group">
@@ -606,16 +805,58 @@
           <input type="time" class="form-input" id="pontualEnd">
         </div>
       </div>
-      <p style="font-size:12px;color:var(--gray-400);margin-top:-8px">Deixe em branco para bloquear/liberar o dia inteiro</p>
+      <p style="font-size:12px;color:var(--gray-400);margin-top:-8px;margin-bottom:16px">Deixe em branco para aplicar ao dia inteiro</p>
     </div>
+
     <div class="form-group">
       <label class="form-label">Observação</label>
       <input type="text" class="form-input" id="pontualNotes" placeholder="Ex: Viagem, feriado...">
     </div>
     <div class="modal-footer">
       <button class="btn btn-cancel" onclick="closePontualModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="savePontual()">Salvar</button>
+      <button class="btn btn-primary" onclick="savePontual()">Salvar exceção</button>
     </div>
+  </div>
+</div>
+
+<!-- PROMPT: WhatsApp pós-ação -->
+<div class="wpp-prompt-overlay" id="wppPromptOverlay">
+  <div class="wpp-prompt-sheet">
+    <div class="wpp-prompt-title" id="wppPromptTitle" style="font-size:20px;font-weight:700;text-align:center;margin-bottom:4px">Avisar o aluno?</div>
+    <div class="wpp-prompt-sub" id="wppPromptSub">Envie uma mensagem automática pelo WhatsApp</div>
+    <div class="wpp-msg-preview" id="wppMsgPreview"></div>
+    <button class="btn-wpp-big" id="wppPromptBtn">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L0 24l6.335-1.505A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.732.886.939-3.627-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>
+      Enviar mensagem agora
+    </button>
+    <button onclick="closeWppPrompt()" style="width:100%;margin-top:10px;padding:12px;background:none;border:1.5px solid var(--gray-200);border-radius:12px;font-size:14px;font-weight:600;color:var(--gray-500);cursor:pointer">Agora não</button>
+  </div>
+</div>
+
+<!-- MODAL: Detalhe da Reserva -->
+<div class="modal-overlay" id="reservaModal">
+  <div class="modal">
+    <div class="reserva-modal-header">
+      <div class="reserva-modal-avatar" id="rModalAvatar">?</div>
+      <div class="reserva-modal-info">
+        <h3 id="rModalName">—</h3>
+        <p id="rModalPhone">—</p>
+      </div>
+    </div>
+    <div id="rModalDetails"></div>
+    <div style="margin-top:16px">
+      <div style="font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Alterar status</div>
+      <div class="status-btns">
+        <button class="status-btn confirmar" id="rBtnConfirmar" onclick="updateReservaStatus('confirmada')">✓ Confirmar</button>
+        <button class="status-btn recusar"   id="rBtnRecusar"   onclick="updateReservaStatus('recusada')">✗ Recusar</button>
+        <button class="status-btn cancelar"  id="rBtnCancelar"  onclick="updateReservaStatus('cancelada')">— Cancelar</button>
+      </div>
+    </div>
+    <button class="btn-wpp-big" id="rBtnWpp">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L0 24l6.335-1.505A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.732.886.939-3.627-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>
+      Mensagem no WhatsApp
+    </button>
+    <button class="btn btn-cancel" onclick="closeReservaModal()" style="width:100%;margin-top:8px;padding:10px">Fechar</button>
   </div>
 </div>
 
@@ -675,7 +916,7 @@
     btn.classList.add('active');
     if (tab === 'financeiro') renderFinanceiro();
     if (tab === 'agenda') loadAgenda();
-    if (tab === 'reservas') loadReservas();
+    if (tab === 'reservas') { loadReservas(); setBookingLink(); }
   }
 
   // ── PERIOD SETTERS ──
@@ -1233,118 +1474,256 @@
     await loadData();
   }
 
-  // ── AGENDA ──
-  const DAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  const DAYS_FULL = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  let agendaPadrao = [], agendaPontual = [];
+  // ── AGENDA (CALENDAR VIEW) ──
+  const CAL_START_H = 6, CAL_END_H = 23, HOUR_PX = 44;
+  const WEEK_DAY_NAMES = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  let agendaPadrao = [], agendaPontual = [], calWeekStart = null;
+
+  function tMin(t) { const [h,m] = (t||'00:00').slice(0,5).split(':').map(Number); return h*60+m; }
+  function tFmt(t) { return (t||'').slice(0,5); }
+
+  function gotoCurrentWeek() {
+    const today = new Date();
+    const d = today.getDay();
+    const mon = new Date(today);
+    mon.setDate(today.getDate() - (d === 0 ? 6 : d - 1));
+    mon.setHours(0,0,0,0);
+    calWeekStart = mon;
+    renderWeekCal();
+  }
+
+  function changeCalWeek(delta) {
+    calWeekStart.setDate(calWeekStart.getDate() + delta * 7);
+    renderWeekCal();
+  }
 
   async function loadAgenda() {
     const [{ data: pad }, { data: pont }] = await Promise.all([
       sb.from('agenda_padrao').select('*').eq('professor_id', profId).eq('active', true).order('day_of_week'),
-      sb.from('agenda_pontual').select('*').eq('professor_id', profId).order('date', { ascending: false }).limit(30),
+      sb.from('agenda_pontual').select('*').eq('professor_id', profId).order('date', { ascending: false }).limit(60),
     ]);
     agendaPadrao = pad || [];
     agendaPontual = pont || [];
-    renderAgendaPadrao();
-    renderAgendaPontual();
+    if (!calWeekStart) gotoCurrentWeek();
+    else renderWeekCal();
   }
 
-  function renderAgendaPadrao() {
+  function renderWeekCal() {
+    const TOTAL_H = (CAL_END_H - CAL_START_H) * HOUR_PX;
+    const START_MIN = CAL_START_H * 60;
+    const today = new Date(); today.setHours(0,0,0,0);
     const canEdit = auth.role === 'gestor' || auth.role === 'professor';
-    const byDay = {};
-    agendaPadrao.forEach(a => { if (!byDay[a.day_of_week]) byDay[a.day_of_week] = []; byDay[a.day_of_week].push(a); });
 
-    let html = '';
-    for (let d = 1; d <= 6; d++) {
-      const slots = byDay[d] || [];
-      html += `<div class="agenda-day-row">
-        <span class="agenda-day-label">${DAYS_FULL[d].split('-')[0]}</span>
-        <div class="agenda-day-times" style="flex:1">
-          ${slots.length ? slots.map(s => `
-            <span class="agenda-slot-tag">
-              ${s.start_time.slice(0,5)} – ${s.end_time.slice(0,5)} · ${s.slot_minutes}min
-              ${canEdit ? `<button onclick="deleteAgendaPadrao('${s.id}')">×</button>` : ''}
-            </span>`).join('') : `<span class="agenda-day-empty">Sem horários</span>`}
+    // Week days Mon(0)…Sun(6)
+    const days = Array.from({length:7}, (_,i) => {
+      const d = new Date(calWeekStart);
+      d.setDate(calWeekStart.getDate() + i);
+      return d;
+    });
+
+    // Nav label
+    const f = days[0], l = days[6];
+    document.getElementById('calWeekLabel').textContent =
+      f.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) + ' – ' +
+      l.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
+
+    // Time labels
+    let timeHtml = '';
+    for (let h = CAL_START_H; h <= CAL_END_H; h++)
+      timeHtml += `<div class="cal-time-label">${h}:00</div>`;
+    document.getElementById('calTimeCol').innerHTML = timeHtml;
+
+    // Build byDay for agenda_padrao (0=Sun…6=Sat)
+    const byDow = {};
+    agendaPadrao.forEach(a => { (byDow[a.day_of_week] = byDow[a.day_of_week]||[]).push(a); });
+
+    const daysHtml = days.map((date, i) => {
+      // i=0→Mon(dow=1), i=1→Tue(dow=2), …, i=6→Sun(dow=0)
+      const dow = i < 6 ? i + 1 : 0;
+      const dateStr = date.toISOString().split('T')[0];
+      const isToday = date.getTime() === today.getTime();
+
+      // Exceptions for this specific date
+      const exceptions = agendaPontual.filter(p => p.date === dateStr);
+      const fullDayBlock = exceptions.find(e => e.type === 'bloqueado' && !e.start_time);
+
+      // Events list
+      const events = [];
+
+      if (!fullDayBlock) {
+        (byDow[dow]||[]).forEach(s => {
+          events.push({ type:'available', start:s.start_time, end:s.end_time, id:s.id,
+            label:`${tFmt(s.start_time)} – ${tFmt(s.end_time)}`, sub:`${s.slot_minutes}min/slot`,
+            del:`deleteAgendaPadrao('${s.id}')` });
+        });
+      }
+      exceptions.forEach(e => {
+        if (e.type === 'bloqueado' && e.start_time) {
+          events.push({ type:'blocked', start:e.start_time, end:e.end_time||'23:59', id:e.id,
+            label:`Bloqueado`, sub: (e.notes||'') + ' · ' + tFmt(e.start_time)+' – '+tFmt(e.end_time),
+            del:`deleteAgendaPontual('${e.id}')` });
+        } else if (e.type === 'disponivel') {
+          events.push({ type:'extra', start:e.start_time||'06:00', end:e.end_time||'22:00', id:e.id,
+            label:`Extra`, sub: (e.notes||'') + (e.start_time ? ' · '+tFmt(e.start_time)+' – '+tFmt(e.end_time) : ''),
+            del:`deleteAgendaPontual('${e.id}')` });
+        }
+      });
+
+      // Hour grid lines
+      let gridLines = '';
+      for (let h = CAL_START_H; h <= CAL_END_H; h++) {
+        const top = (h - CAL_START_H) * HOUR_PX;
+        gridLines += `<div class="cal-hour-line" style="top:${top}px"></div>`;
+        if (h < CAL_END_H) gridLines += `<div class="cal-hour-half" style="top:${top + HOUR_PX/2}px"></div>`;
+      }
+
+      // Event blocks
+      const eventsHtml = events.map(e => {
+        const sMin = Math.max(tMin(e.start), START_MIN);
+        const eMin = Math.min(tMin(e.end), CAL_END_H*60);
+        if (sMin >= eMin) return '';
+        const top = (sMin - START_MIN) / 60 * HOUR_PX;
+        const height = Math.max((eMin - sMin) / 60 * HOUR_PX - 2, 18);
+        const delAttr = canEdit ? `onclick="${e.del}"` : '';
+        return `<div class="cal-event ${e.type}" style="top:${top}px;height:${height}px" ${delAttr} title="Clique para remover">
+          <div class="cal-event-title">${e.label}</div>
+          ${height > 26 ? `<div class="cal-event-sub">${e.sub}</div>` : ''}
+        </div>`;
+      }).join('');
+
+      const fullDayHtml = fullDayBlock ? `<div class="cal-fullday-block" onclick="${canEdit?`deleteAgendaPontual('${fullDayBlock.id}')`:''}" title="Clique para remover">Dia bloqueado${fullDayBlock.notes?' · '+fullDayBlock.notes:''}</div>` : '';
+
+      const numCls = isToday ? ' today' : '';
+      return `<div class="cal-day-col">
+        <div class="cal-day-header">
+          <div class="cal-day-name">${WEEK_DAY_NAMES[i]}</div>
+          <div class="cal-day-num${numCls}">${date.getDate()}</div>
+        </div>
+        ${fullDayHtml}
+        <div class="cal-day-body" style="height:${TOTAL_H}px">
+          ${gridLines}
+          ${eventsHtml}
         </div>
       </div>`;
-    }
-    // Domingo
-    const domSlots = byDay[0] || [];
-    html += `<div class="agenda-day-row">
-      <span class="agenda-day-label">Domingo</span>
-      <div class="agenda-day-times" style="flex:1">
-        ${domSlots.length ? domSlots.map(s => `
-          <span class="agenda-slot-tag">
-            ${s.start_time.slice(0,5)} – ${s.end_time.slice(0,5)} · ${s.slot_minutes}min
-            ${canEdit ? `<button onclick="deleteAgendaPadrao('${s.id}')">×</button>` : ''}
-          </span>`).join('') : `<span class="agenda-day-empty">Sem horários</span>`}
-      </div>
-    </div>`;
-
-    document.getElementById('agendaPadraoWrap').innerHTML = html;
-    document.getElementById('addDiaWrap').style.display = canEdit ? 'block' : 'none';
-  }
-
-  function renderAgendaPontual() {
-    const canEdit = auth.role === 'gestor' || auth.role === 'professor';
-    if (!agendaPontual.length) {
-      document.getElementById('agendaPontualWrap').innerHTML = '<div class="empty">Nenhuma exceção cadastrada.</div>';
-      return;
-    }
-    const rows = agendaPontual.map(p => {
-      const d = new Date(p.date + 'T12:00:00');
-      const isBloq = p.type === 'bloqueado';
-      const timeStr = p.start_time ? `${p.start_time.slice(0,5)} – ${p.end_time?.slice(0,5) || '?'}` : 'Dia inteiro';
-      return `<div style="display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--gray-50)">
-        <span style="font-size:13px;font-weight:600;color:var(--gray-800);min-width:90px">${d.toLocaleDateString('pt-BR')}</span>
-        <span class="agenda-slot-tag" style="${isBloq ? 'background:#FEE2E2;color:#991B1B;border-color:#FCA5A5' : ''}">${isBloq ? 'Bloqueado' : 'Extra'} · ${timeStr}</span>
-        <span style="font-size:12px;color:var(--gray-400);flex:1">${p.notes || ''}</span>
-        ${canEdit ? `<button class="icon-btn del" onclick="deleteAgendaPontual('${p.id}')">🗑️</button>` : ''}
-      </div>`;
     }).join('');
-    document.getElementById('agendaPontualWrap').innerHTML = rows;
+
+    document.getElementById('calDaysCols').innerHTML = daysHtml;
   }
 
-  // Modal dia padrão
-  function openAddDiaModal() {
+  // Modal disponibilidade recorrente
+  function selectDow(dow) {
+    const pill = document.querySelector(`.dow-pill[data-dow="${dow}"]`);
+    pill.classList.toggle('active');
+  }
+  function selectSlot(val) {
+    document.getElementById('diaSlot').value = val;
+    document.querySelectorAll('.slot-pill').forEach(p => p.classList.toggle('active', parseInt(p.dataset.val) === val));
+  }
+
+  function openAddDiaModal(prefillDow) {
+    // Clear all day selections
+    document.querySelectorAll('.dow-pill').forEach(p => p.classList.remove('active'));
+    if (prefillDow !== undefined) selectDow(prefillDow);
+    selectSlot(60);
+    document.getElementById('diaStart').value = '07:00';
+    document.getElementById('diaEnd').value = '12:00';
     document.getElementById('diaModal').classList.add('open');
   }
   function closeDiaModal() { document.getElementById('diaModal').classList.remove('open'); }
   document.getElementById('diaModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDiaModal(); });
 
   async function saveDia() {
-    const day_of_week = parseInt(document.getElementById('diaDow').value);
+    const selectedDays = [...document.querySelectorAll('.dow-pill.active')].map(p => parseInt(p.dataset.dow));
     const start_time = document.getElementById('diaStart').value;
     const end_time = document.getElementById('diaEnd').value;
     const slot_minutes = parseInt(document.getElementById('diaSlot').value);
+    if (!selectedDays.length) { alert('Selecione pelo menos um dia da semana.'); return; }
     if (!start_time || !end_time || start_time >= end_time) { alert('Horário inválido.'); return; }
-    await sb.from('agenda_padrao').insert({ professor_id: profId, day_of_week, start_time, end_time, slot_minutes });
+    const rows = selectedDays.map(day_of_week => ({ professor_id: profId, day_of_week, start_time, end_time, slot_minutes }));
+    await sb.from('agenda_padrao').insert(rows);
     closeDiaModal();
     await loadAgenda();
   }
 
   async function deleteAgendaPadrao(id) {
-    if (!confirm('Remover este horário?')) return;
+    if (!confirm('Remover este horário recorrente?')) return;
     await sb.from('agenda_padrao').delete().eq('id', id);
     await loadAgenda();
   }
 
-  // Modal pontual
-  function openAddPontualModal() {
-    document.getElementById('pontualDate').value = new Date().toISOString().split('T')[0];
+  // Modal exceção pontual
+  let pontualCalYear, pontualCalMonth, pontualSelectedDate, pontualType = 'bloqueado';
+
+  function selectPontualType(type) {
+    pontualType = type;
+    document.getElementById('ttBlock').className = 'type-toggle-btn' + (type === 'bloqueado' ? ' selected-block' : '');
+    document.getElementById('ttExtra').className = 'type-toggle-btn' + (type === 'disponivel' ? ' selected-extra' : '');
+  }
+
+  function openAddPontualModal(prefillDate) {
+    const now = new Date();
+    pontualCalYear = now.getFullYear();
+    pontualCalMonth = now.getMonth();
+    pontualSelectedDate = prefillDate || null;
+    selectPontualType('bloqueado');
+    document.getElementById('pontualStart').value = '';
+    document.getElementById('pontualEnd').value = '';
+    document.getElementById('pontualNotes').value = '';
+    const disp = document.getElementById('pontualDateDisplay');
+    if (prefillDate) {
+      const d = new Date(prefillDate + 'T12:00:00');
+      disp.textContent = d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+      disp.className = 'date-display';
+      pontualCalYear = d.getFullYear(); pontualCalMonth = d.getMonth();
+    } else {
+      disp.textContent = 'Selecione uma data'; disp.className = 'date-display empty';
+    }
+    renderPontualCal();
     document.getElementById('pontualModal').classList.add('open');
   }
+
   function closePontualModal() { document.getElementById('pontualModal').classList.remove('open'); }
   document.getElementById('pontualModal').addEventListener('click', e => { if (e.target === e.currentTarget) closePontualModal(); });
 
+  function changePontualMonth(delta) {
+    pontualCalMonth += delta;
+    if (pontualCalMonth > 11) { pontualCalMonth = 0; pontualCalYear++; }
+    if (pontualCalMonth < 0) { pontualCalMonth = 11; pontualCalYear--; }
+    renderPontualCal();
+  }
+
+  function renderPontualCal() {
+    document.getElementById('pontualCalLabel').textContent =
+      new Date(pontualCalYear, pontualCalMonth, 1).toLocaleString('pt-BR', {month:'long',year:'numeric'});
+    const firstDay = new Date(pontualCalYear, pontualCalMonth, 1).getDay();
+    const daysInMonth = new Date(pontualCalYear, pontualCalMonth + 1, 0).getDate();
+    const today = new Date(); today.setHours(0,0,0,0);
+    let html = '';
+    for (let i = 0; i < firstDay; i++) html += '<button class="mini-cal-d other-m" disabled></button>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(pontualCalYear, pontualCalMonth, d);
+      const dateStr = date.toISOString().split('T')[0];
+      const sel = pontualSelectedDate === dateStr;
+      html += `<button class="mini-cal-d${sel?' selected':''}" ${date<today?'disabled':`onclick="selectPontualDate('${dateStr}')"`}>${d}</button>`;
+    }
+    document.getElementById('pontualCalDays').innerHTML = html;
+  }
+
+  function selectPontualDate(dateStr) {
+    pontualSelectedDate = dateStr;
+    const d = new Date(dateStr + 'T12:00:00');
+    const disp = document.getElementById('pontualDateDisplay');
+    disp.textContent = d.toLocaleDateString('pt-BR', {weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    disp.className = 'date-display';
+    renderPontualCal();
+  }
+
   async function savePontual() {
-    const type = document.getElementById('pontualType').value;
-    const date = document.getElementById('pontualDate').value;
+    if (!pontualSelectedDate) { alert('Selecione uma data no calendário.'); return; }
     const start_time = document.getElementById('pontualStart').value || null;
     const end_time = document.getElementById('pontualEnd').value || null;
     const notes = document.getElementById('pontualNotes').value.trim();
-    if (!date) { alert('Selecione a data.'); return; }
-    await sb.from('agenda_pontual').insert({ professor_id: profId, type, date, start_time, end_time, notes: notes || null });
+    await sb.from('agenda_pontual').insert({ professor_id: profId, type: pontualType, date: pontualSelectedDate, start_time, end_time, notes: notes||null });
     closePontualModal();
     await loadAgenda();
   }
@@ -1356,8 +1735,26 @@
   }
 
   // ── RESERVAS ──
-  let allReservas = [];
-  let reservaFilter = 'todas';
+  let allReservas = [], reservaFilter = 'todas', resWeekStart = null, activeReservaId = null;
+  const RES_COLORS = ['#F97316','#8B5CF6','#10B981','#3B82F6','#EC4899','#F59E0B'];
+
+  function avatarColor(name) { let h = 0; for (const c of (name||'?')) h = (h*31+c.charCodeAt(0))&0xFFFFFF; return RES_COLORS[Math.abs(h) % RES_COLORS.length]; }
+
+  function setBookingLink() {
+    const base = window.location.origin + window.location.pathname.replace('professor.html','agendar.html');
+    const url = `${base}?club=${auth.clubId}&prof=${profId}`;
+    document.getElementById('bookingLinkInput').value = url;
+  }
+
+  function copyBookingLink() {
+    const input = document.getElementById('bookingLinkInput');
+    navigator.clipboard.writeText(input.value).then(() => {
+      const btn = document.getElementById('copyLinkBtn');
+      btn.textContent = 'Copiado!';
+      btn.style.background = 'var(--green)';
+      setTimeout(() => { btn.textContent = 'Copiar link'; btn.style.background = 'var(--orange)'; }, 2000);
+    });
+  }
 
   async function loadReservas() {
     const { data } = await sb.from('reservas')
@@ -1370,7 +1767,78 @@
     const badge = document.getElementById('reservasBadge');
     if (pendentes > 0) { badge.style.display = 'inline'; badge.textContent = pendentes; }
     else badge.style.display = 'none';
+    if (!resWeekStart) gotoCurrentResWeek();
+    else renderResWeekCal();
     renderReservas();
+  }
+
+  function gotoCurrentResWeek() {
+    const today = new Date(), d = today.getDay();
+    const mon = new Date(today);
+    mon.setDate(today.getDate() - (d === 0 ? 6 : d - 1));
+    mon.setHours(0,0,0,0);
+    resWeekStart = mon;
+    renderResWeekCal();
+  }
+  function changeResWeek(delta) {
+    resWeekStart.setDate(resWeekStart.getDate() + delta * 7);
+    renderResWeekCal();
+  }
+
+  function renderResWeekCal() {
+    const TOTAL_H = (CAL_END_H - CAL_START_H) * HOUR_PX;
+    const START_MIN = CAL_START_H * 60;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const days = Array.from({length:7}, (_,i) => { const d = new Date(resWeekStart); d.setDate(resWeekStart.getDate()+i); return d; });
+
+    const f = days[0], l = days[6];
+    document.getElementById('resWeekLabel').textContent =
+      f.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) + ' – ' +
+      l.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
+
+    let timeHtml = '';
+    for (let h = CAL_START_H; h <= CAL_END_H; h++) timeHtml += `<div class="cal-time-label">${h}:00</div>`;
+    document.getElementById('resTimeCol').innerHTML = timeHtml;
+
+    const daysHtml = days.map((date, i) => {
+      const dateStr = date.toISOString().split('T')[0];
+      const isToday = date.getTime() === today.getTime();
+      const dayReservas = allReservas.filter(r => r.date === dateStr && r.status !== 'cancelada');
+
+      let gridLines = '';
+      for (let h = CAL_START_H; h <= CAL_END_H; h++) {
+        const top = (h - CAL_START_H) * HOUR_PX;
+        gridLines += `<div class="cal-hour-line" style="top:${top}px"></div>`;
+        if (h < CAL_END_H) gridLines += `<div class="cal-hour-half" style="top:${top+HOUR_PX/2}px"></div>`;
+      }
+
+      const eventsHtml = dayReservas.map(r => {
+        const rMin = tMin(r.time);
+        const clampStart = Math.max(rMin, START_MIN);
+        const clampEnd = Math.min(rMin + 60, CAL_END_H * 60);
+        if (clampStart >= clampEnd) return '';
+        const top = (clampStart - START_MIN) / 60 * HOUR_PX;
+        const height = Math.max((clampEnd - clampStart) / 60 * HOUR_PX - 2, 18);
+        const typeName = r.lesson_types?.name || '';
+        return `<div class="res-event ${r.status}" style="top:${top}px;height:${height}px" onclick="openReservaModal('${r.id}')">
+          <div class="res-event-name">${r.student_name}</div>
+          ${height > 26 ? `<div class="res-event-sub">${r.time?.slice(0,5)}${typeName ? ' · '+typeName : ''}</div>` : ''}
+        </div>`;
+      }).join('');
+
+      const numCls = isToday ? ' today' : '';
+      return `<div class="cal-day-col">
+        <div class="cal-day-header">
+          <div class="cal-day-name">${WEEK_DAY_NAMES[i]}</div>
+          <div class="cal-day-num${numCls}">${date.getDate()}</div>
+        </div>
+        <div class="cal-day-body" style="height:${TOTAL_H}px">
+          ${gridLines}${eventsHtml}
+        </div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('resDaysCols').innerHTML = daysHtml;
   }
 
   function setReservaFilter(f, btn) {
@@ -1383,52 +1851,149 @@
   function renderReservas() {
     const filtered = reservaFilter === 'todas' ? allReservas : allReservas.filter(r => r.status === reservaFilter);
     if (!filtered.length) {
-      document.getElementById('reservasWrap').innerHTML = '<div class="empty">Nenhuma reserva encontrada.</div>';
+      document.getElementById('reservasWrap').innerHTML = '<div class="empty" style="padding:32px">Nenhuma reserva encontrada.</div>';
       return;
     }
-    const statusLabel = { pendente: 'Pendente', confirmada: 'Confirmada', recusada: 'Recusada', cancelada: 'Cancelada' };
+    const statusLabel = { pendente:'Pendente', confirmada:'Confirmada', recusada:'Recusada', cancelada:'Cancelada' };
+    const wppSvg = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L0 24l6.335-1.505A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.732.886.939-3.627-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>`;
     const rows = filtered.map(r => {
       const d = new Date(r.date + 'T12:00:00');
-      const day = d.getDate().toString().padStart(2,'0');
-      const mon = d.toLocaleString('pt-BR', { month: 'short' }).replace('.','').toUpperCase();
+      const dateLabel = d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
       const typeName = r.lesson_types?.name || '—';
       const typeColor = r.lesson_types?.color || '#9CA3AF';
-      const canAct = auth.role === 'gestor' || auth.role === 'professor';
-      const actions = r.status === 'pendente' && canAct ? `
-        <div class="reserva-actions">
-          <button class="btn-confirmar" onclick="confirmarReserva('${r.id}')">Confirmar</button>
-          <button class="btn-recusar" onclick="recusarReserva('${r.id}')">Recusar</button>
-        </div>` : '';
-      const wppBtn = r.student_phone ? `<button class="btn-wpp" onclick="abrirWpp('${r.student_phone}','${r.student_name}','${d.toLocaleDateString('pt-BR')}','${r.time?.slice(0,5)}','${typeName}')" title="WhatsApp">💬</button>` : '';
-      return `<div class="reserva-row">
-        <div class="reserva-date"><div class="reserva-date-day">${day}</div><div class="reserva-date-mon">${mon}</div></div>
-        <div class="reserva-divider"></div>
-        <div class="reserva-time">${r.time?.slice(0,5)}</div>
-        <div class="reserva-info">
-          <div class="reserva-student">${r.student_name}</div>
-          <div class="reserva-detail">${r.student_phone} · <span style="color:${typeColor};font-weight:600">${typeName}</span>${r.notes ? ' · ' + r.notes : ''}</div>
+      const color = avatarColor(r.student_name);
+      return `<div class="reserva-row ${r.status}" onclick="openReservaModal('${r.id}')">
+        <div class="reserva-avatar" style="background:${color}">${r.student_name[0]}</div>
+        <div class="reserva-main">
+          <div class="reserva-name">${r.student_name}</div>
+          <div class="reserva-meta">
+            <span class="reserva-time-text">${dateLabel} · ${r.time?.slice(0,5)}</span>
+            <span class="reserva-type-tag" style="background:${typeColor}22;color:${typeColor}">${typeName}</span>
+          </div>
         </div>
-        <span class="reserva-status status-${r.status}">${statusLabel[r.status]}</span>
-        ${actions}
-        ${wppBtn}
+        <span class="r-status ${r.status}">${statusLabel[r.status]}</span>
+        ${r.student_phone ? `<button class="btn-wpp-sm" onclick="event.stopPropagation();abrirWpp('${r.student_phone}','${r.student_name}','${d.toLocaleDateString('pt-BR')}','${r.time?.slice(0,5)}','${typeName}')" title="WhatsApp">${wppSvg}</button>` : '<div style="width:32px"></div>'}
       </div>`;
     }).join('');
-    document.getElementById('reservasWrap').innerHTML = rows;
+    document.getElementById('reservasWrap').innerHTML = `<div class="reserva-list">${rows}</div>`;
   }
 
-  async function confirmarReserva(id) {
-    await sb.from('reservas').update({ status: 'confirmada' }).eq('id', id);
+  function openReservaModal(id) {
+    activeReservaId = id;
+    const r = allReservas.find(x => x.id === id);
+    if (!r) return;
+    const d = new Date(r.date + 'T12:00:00');
+    const typeName = r.lesson_types?.name || '—';
+    const typeColor = r.lesson_types?.color || '#9CA3AF';
+    const color = avatarColor(r.student_name);
+    const statusLabel = { pendente:'Pendente', confirmada:'Confirmada', recusada:'Recusada', cancelada:'Cancelada' };
+
+    document.getElementById('rModalAvatar').textContent = r.student_name[0];
+    document.getElementById('rModalAvatar').style.background = color;
+    document.getElementById('rModalName').textContent = r.student_name;
+    document.getElementById('rModalPhone').textContent = r.student_phone || 'Sem telefone';
+
+    document.getElementById('rModalDetails').innerHTML = `
+      <div class="reserva-detail-row"><div><div class="reserva-detail-label">Data</div>${d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div></div>
+      <div class="reserva-detail-row"><div><div class="reserva-detail-label">Horário</div>${r.time?.slice(0,5)}</div></div>
+      <div class="reserva-detail-row"><div><div class="reserva-detail-label">Tipo de Aula</div><span style="color:${typeColor};font-weight:700">${typeName}</span></div></div>
+      <div class="reserva-detail-row"><div><div class="reserva-detail-label">Status atual</div><span class="r-status ${r.status}" style="display:inline-flex">${statusLabel[r.status]}</span></div></div>
+      ${r.notes ? `<div class="reserva-detail-row"><span class="reserva-detail-icon" style="font-size:14px;color:var(--gray-400)">—</span><div><div class="reserva-detail-label">Observação</div>${r.notes}</div></div>` : ''}`;
+
+    // Mark active status button
+    ['confirmar','recusar','cancelar'].forEach(s => {
+      const statusMap = { confirmar:'confirmada', recusar:'recusada', cancelar:'cancelada' };
+      const btn = document.getElementById(`rBtn${s.charAt(0).toUpperCase()+s.slice(1)}`);
+      btn.classList.toggle('active-status', r.status === statusMap[s]);
+    });
+
+    // WhatsApp button
+    const wppBtn = document.getElementById('rBtnWpp');
+    if (r.student_phone) {
+      wppBtn.style.display = 'flex';
+      wppBtn.onclick = () => abrirWpp(r.student_phone, r.student_name, d.toLocaleDateString('pt-BR'), r.time?.slice(0,5), typeName);
+    } else {
+      wppBtn.style.display = 'none';
+    }
+
+    document.getElementById('reservaModal').classList.add('open');
+  }
+
+  function closeReservaModal() { document.getElementById('reservaModal').classList.remove('open'); }
+  document.getElementById('reservaModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeReservaModal(); });
+
+  async function updateReservaStatus(newStatus) {
+    if (!activeReservaId) return;
+    if (newStatus === 'recusada' && !confirm('Recusar esta reserva?')) return;
+    if (newStatus === 'cancelada' && !confirm('Cancelar esta reserva?')) return;
+    await sb.from('reservas').update({ status: newStatus }).eq('id', activeReservaId);
+    closeReservaModal();
     await loadReservas();
   }
-  async function recusarReserva(id) {
-    if (!confirm('Recusar esta reserva?')) return;
-    await sb.from('reservas').update({ status: 'recusada' }).eq('id', id);
+
+  const WPP_TEMPLATES = {
+    confirmada: (nome, tipo, data, hora) =>
+      `Olá, ${nome}!\n\nSua reserva foi *confirmada*. Anote na agenda:\n\n*Data:* ${data}\n*Horário:* ${hora}\n*Tipo:* ${tipo}\n\nTe esperamos! Qualquer dúvida, é só falar.`,
+    recusada: (nome, tipo, data, hora) =>
+      `Olá, ${nome}!\n\nInfelizmente não consigo atender sua reserva de *${tipo}* no dia *${data}* às *${hora}*.\n\nPeço desculpas pelo inconveniente. Entre em contato para encontrarmos outro horário!`,
+    cancelada: (nome, tipo, data, hora) =>
+      `Olá, ${nome}!\n\nPrecisei *cancelar* nossa aula de *${tipo}* marcada para *${data}* às *${hora}*.\n\nSinto muito pelo transtorno. Vamos reagendar em breve!`,
+  };
+
+  const WPP_PROMPT_LABELS = {
+    confirmada: { title: 'Reserva confirmada', sub: 'Avise o aluno pelo WhatsApp agora' },
+    recusada:   { title: 'Reserva recusada',   sub: 'Explique ao aluno pelo WhatsApp' },
+    cancelada:  { title: 'Reserva cancelada',  sub: 'Informe o aluno pelo WhatsApp' },
+  };
+
+  let _wppPromptPhone = null, _wppPromptMsg = null;
+
+  function showWppPrompt(phone, nome, status, data, hora, tipo) {
+    if (!phone) return;
+    const msg = WPP_TEMPLATES[status]?.(nome, tipo, data, hora);
+    if (!msg) return;
+    _wppPromptPhone = phone;
+    _wppPromptMsg = msg;
+    const labels = WPP_PROMPT_LABELS[status] || {};
+    document.getElementById('wppPromptTitle').textContent = labels.title || 'Avisar o aluno?';
+    document.getElementById('wppPromptSub').textContent = labels.sub || '';
+    document.getElementById('wppMsgPreview').textContent = msg;
+    document.getElementById('wppPromptBtn').onclick = () => { sendWppNow(); };
+    document.getElementById('wppPromptOverlay').classList.add('open');
+  }
+
+  function sendWppNow() {
+    if (_wppPromptPhone && _wppPromptMsg) {
+      window.open(`https://wa.me/${_wppPromptPhone}?text=${encodeURIComponent(_wppPromptMsg)}`, '_blank');
+    }
+    closeWppPrompt();
+  }
+
+  function closeWppPrompt() {
+    document.getElementById('wppPromptOverlay').classList.remove('open');
+    _wppPromptPhone = null; _wppPromptMsg = null;
+  }
+  document.getElementById('wppPromptOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeWppPrompt(); });
+
+  async function updateReservaStatus(newStatus) {
+    if (!activeReservaId) return;
+    if (newStatus === 'recusada' && !confirm('Recusar esta reserva?')) return;
+    if (newStatus === 'cancelada' && !confirm('Cancelar esta reserva?')) return;
+    const r = allReservas.find(x => x.id === activeReservaId);
+    await sb.from('reservas').update({ status: newStatus }).eq('id', activeReservaId);
+    closeReservaModal();
     await loadReservas();
+    if (r?.student_phone) {
+      const d = new Date(r.date + 'T12:00:00');
+      showWppPrompt(r.student_phone, r.student_name, newStatus,
+        d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' }),
+        r.time?.slice(0,5), r.lesson_types?.name || 'aula');
+    }
   }
 
   function abrirWpp(phone, nome, data, hora, tipo) {
-    const msg = encodeURIComponent(`Olá ${nome}! Sua reserva de ${tipo} no dia ${data} às ${hora} foi confirmada. Te esperamos! 🎾`);
-    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    const msg = WPP_TEMPLATES.confirmada(nome, tipo, data, hora);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
   loadData();
