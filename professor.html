@@ -354,7 +354,8 @@
   if (auth.role === 'secretaria') window.location.href = 'registro.html';
 
   const params = new URLSearchParams(location.search);
-  const profId = params.get('id') || auth.professorId;
+  // Professor can only see their own data — gestor can see anyone
+  const profId = auth.role === 'professor' ? auth.professorId : (params.get('id') || auth.professorId);
   if (!profId) window.location.href = 'dashboard.html';
 
   document.getElementById('userChip').textContent = auth.name;
