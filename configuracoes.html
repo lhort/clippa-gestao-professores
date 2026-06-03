@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clippa — Configurações</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #F97316; --orange-dark: #EA6A0A; --orange-light: #FFF7ED;
+      --gray-50: #F9FAFB; --gray-100: #F3F4F6; --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF; --gray-500: #6B7280; --gray-600: #4B5563;
+      --gray-700: #374151; --gray-800: #1F2937; --gray-900: #111827;
+      --red: #EF4444;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
+
+    nav { background: white; border-bottom: 1px solid var(--gray-200); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .nav-logo { height: 24px; }
+    .nav-link { font-size: 13px; font-weight: 500; color: var(--gray-500); text-decoration: none; padding: 6px 12px; border-radius: 8px; transition: .15s; }
+    .nav-link:hover { background: var(--gray-100); color: var(--gray-800); }
+    .nav-link.active { background: var(--orange-light); color: var(--orange); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .user-chip { font-size: 13px; font-weight: 600; color: var(--gray-700); background: var(--gray-100); padding: 6px 12px; border-radius: 8px; }
+    .btn-logout { font-size: 13px; color: var(--gray-500); background: none; border: 1px solid var(--gray-200); padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: .15s; }
+    .btn-logout:hover { background: var(--gray-100); }
+
+    main { max-width: 900px; margin: 0 auto; padding: 32px 24px 64px; }
+    .page-header { margin-bottom: 32px; }
+    .page-header h1 { font-size: 24px; font-weight: 700; }
+    .page-header p { font-size: 14px; color: var(--gray-400); margin-top: 4px; }
+
+    .section { margin-bottom: 32px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-header h2 { font-size: 17px; font-weight: 700; color: var(--gray-800); }
+    .section-header span { font-size: 13px; color: var(--gray-400); }
+
+    .card { background: white; border-radius: 14px; border: 1px solid var(--gray-100); overflow: hidden; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th { font-size: 11px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; padding: 12px 20px; text-align: left; border-bottom: 1px solid var(--gray-100); }
+    tbody td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--gray-50); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--gray-50); }
+
+    .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: middle; }
+    .type-name { font-weight: 600; color: var(--gray-800); }
+    .action-icons { display: flex; gap: 6px; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 7px; font-size: 14px; transition: .15s; }
+    .icon-btn:hover { background: var(--gray-100); }
+    .icon-btn.del:hover { background: #FEF2F2; }
+
+    /* Prof list */
+    .prof-list { display: flex; flex-direction: column; }
+    .prof-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--gray-50); }
+    .prof-row:last-child { border-bottom: none; }
+    .prof-row:hover { background: var(--gray-50); }
+    .prof-info { display: flex; align-items: center; gap: 12px; }
+    .prof-avatar { width: 36px; height: 36px; border-radius: 10px; background: var(--orange); color: white; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    /* User list */
+    .role-badge { display: inline-flex; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+    .role-gestor { background: #FFF7ED; color: var(--orange); }
+    .role-professor { background: #EFF6FF; color: #3B82F6; }
+    .role-secretaria { background: #F0FDF4; color: #10B981; }
+
+    /* BTN */
+    .btn { padding: 8px 16px; border-radius: 10px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: .15s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-primary:hover { background: var(--orange-dark); }
+    .btn-sm { padding: 7px 14px; font-size: 13px; }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+    .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 7px; }
+    .form-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: 10px; font-size: 14px; color: var(--gray-900); outline: none; transition: border-color .15s; background: var(--gray-50); }
+    .form-input:focus { border-color: var(--orange); background: white; }
+    select.form-input { cursor: pointer; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .modal-footer { display: flex; gap: 10px; margin-top: 24px; }
+    .modal-footer .btn { flex: 1; justify-content: center; padding: 12px; font-size: 14px; }
+    .btn-cancel { background: var(--gray-100); color: var(--gray-600); border: none; border-radius: 10px; cursor: pointer; }
+    .btn-cancel:hover { background: var(--gray-200); }
+
+    .empty { padding: 32px; text-align: center; color: var(--gray-400); font-size: 14px; }
+    .loading { padding: 32px; text-align: center; color: var(--gray-400); font-size: 14px; }
+    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--gray-200); border-top-color: var(--orange); border-radius: 50%; animation: spin .6s linear infinite; margin-right: 8px; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-left">
+      <img src="logo_clippa_oficial.png" alt="Clippa" class="nav-logo" onerror="this.style.display='none'">
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="configuracoes.html" class="nav-link active">Configurações</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-chip" id="userChip">—</span>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Configurações</h1>
+      <p>Gerencie professores, tipos de aula e acessos</p>
+    </div>
+
+    <!-- TIPOS DE AULA -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Tipos de Aula</h2>
+        <button class="btn btn-primary btn-sm" onclick="openTypeModal()">+ Novo Tipo</button>
+      </div>
+      <div class="card">
+        <div id="typesWrap"><div class="loading"><span class="spinner"></span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <!-- PROFESSORES -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Professores</h2>
+        <button class="btn btn-primary btn-sm" onclick="openProfModal()">+ Adicionar</button>
+      </div>
+      <div class="card">
+        <div class="prof-list" id="profList"><div class="loading"><span class="spinner"></span>Carregando...</div></div>
+      </div>
+    </div>
+
+    <!-- USUÁRIOS / ACESSO -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Usuários e Acessos</h2>
+        <button class="btn btn-primary btn-sm" onclick="openUserModal()">+ Novo Usuário</button>
+      </div>
+      <div class="card">
+        <div id="usersWrap"><div class="loading"><span class="spinner"></span>Carregando...</div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: Tipo de Aula -->
+  <div class="modal-overlay" id="typeModal">
+    <div class="modal">
+      <h2 id="typeModalTitle">Novo Tipo de Aula</h2>
+      <div class="form-group">
+        <label class="form-label">Nome</label>
+        <input type="text" class="form-input" id="tName" placeholder="Ex: INDIVIDUAL, DUPLA...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Valor Total (R$)</label>
+          <input type="number" class="form-input" id="tPrice" placeholder="0,00" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nº de Alunos</label>
+          <input type="number" class="form-input" id="tStudents" placeholder="0 = variável" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">% Professor</label>
+          <input type="number" class="form-input" id="tProfPct" placeholder="60" min="0" max="100" oninput="updateClubePct()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">% Clube</label>
+          <input type="number" class="form-input" id="tClubPct" placeholder="40" min="0" max="100" readonly style="background:var(--gray-100)">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cor</label>
+        <input type="color" class="form-input" id="tColor" value="#F97316" style="height:44px;padding:4px 8px;cursor:pointer">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel btn" onclick="closeTypeModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveType()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Professor -->
+  <div class="modal-overlay" id="profModal">
+    <div class="modal">
+      <h2 id="profModalTitle">Novo Professor</h2>
+      <div class="form-group">
+        <label class="form-label">Nome</label>
+        <input type="text" class="form-input" id="pName" placeholder="Nome completo">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel btn" onclick="closeProfModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveProf()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Usuário -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal">
+      <h2>Novo Usuário</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-input" id="uName" placeholder="Nome completo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Usuário</label>
+          <input type="text" class="form-input" id="uUsername" placeholder="ex: lucas" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Perfil</label>
+          <select class="form-input" id="uRole" onchange="onRoleChange()">
+            <option value="gestor">Gestor</option>
+            <option value="professor">Professor</option>
+            <option value="secretaria">Secretaria</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">PIN (4-6 dígitos)</label>
+          <input type="text" class="form-input" id="uPin" maxlength="6" placeholder="••••" inputmode="numeric">
+        </div>
+      </div>
+      <div class="form-group" id="uProfGroup" style="display:none">
+        <label class="form-label">Professor vinculado</label>
+        <select class="form-input" id="uProfId">
+          <option value="">Selecionar professor...</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel btn" onclick="closeUserModal()">Cancelar</button>
+        <button class="btn btn-primary" id="uSaveBtn" onclick="saveUser()">Criar Acesso</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://kcbxkbrxgalsceivquwu.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_C2UiZhnZN2unCt3MebBdlg_ccvMea--';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const auth = JSON.parse(sessionStorage.getItem('clippa_auth') || 'null');
+    if (!auth || auth.role !== 'gestor') { window.location.href = 'index.html'; }
+    document.getElementById('userChip').textContent = auth.name;
+
+    function logout() { sessionStorage.removeItem('clippa_auth'); window.location.href = 'index.html'; }
+
+    let lessonTypes = [], professors = [], users = [];
+    let editingTypeId = null, editingProfId = null;
+
+    async function loadAll() {
+      const [{ data: types }, { data: profs }, { data: usrs }] = await Promise.all([
+        sb.from('lesson_types').select('*').eq('club_id', auth.clubId).order('sort_order'),
+        sb.from('professors').select('*').eq('club_id', auth.clubId).eq('active', true).order('name'),
+        sb.from('app_users').select('*').eq('club_id', auth.clubId).eq('active', true).order('name'),
+      ]);
+      lessonTypes = types || [];
+      professors = profs || [];
+      users = usrs || [];
+      renderTypes(); renderProfs(); renderUsers();
+    }
+
+    function renderTypes() {
+      if (!lessonTypes.length) { document.getElementById('typesWrap').innerHTML = '<div class="empty">Nenhum tipo cadastrado.</div>'; return; }
+      const fmt = n => 'R$ ' + Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      const rows = lessonTypes.map(t => `<tr>
+        <td><span class="color-dot" style="background:${t.color}"></span><span class="type-name">${t.name}</span></td>
+        <td>${fmt(t.total_price)}</td>
+        <td style="color:var(--orange);font-weight:600">${t.prof_pct}% (${fmt(t.total_price * t.prof_pct / 100)})</td>
+        <td style="color:var(--gray-500)">${t.club_pct}% (${fmt(t.total_price * t.club_pct / 100)})</td>
+        <td>${t.num_students === 0 ? 'Variável' : t.num_students}</td>
+        <td><div class="action-icons">
+          <button class="icon-btn" onclick="editType('${t.id}')">✏️</button>
+          <button class="icon-btn del" onclick="deleteType('${t.id}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+      document.getElementById('typesWrap').innerHTML = `
+        <table><thead><tr>
+          <th>Tipo</th><th>Valor Total</th><th>Professor</th><th>Clube</th><th>Alunos</th><th></th>
+        </tr></thead><tbody>${rows}</tbody></table>`;
+    }
+
+    function renderProfs() {
+      if (!professors.length) { document.getElementById('profList').innerHTML = '<div class="empty">Nenhum professor cadastrado.</div>'; return; }
+      document.getElementById('profList').innerHTML = professors.map(p => `
+        <div class="prof-row">
+          <div class="prof-info">
+            <div class="prof-avatar">${p.name[0]}</div>
+            <span style="font-weight:600;color:var(--gray-800)">${p.name}</span>
+          </div>
+          <div class="action-icons">
+            <button class="icon-btn" onclick="editProf('${p.id}', '${p.name.replace(/'/g,"\\'")}')">✏️</button>
+            <button class="icon-btn del" onclick="deleteProf('${p.id}')">🗑️</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderUsers() {
+      if (!users.length) { document.getElementById('usersWrap').innerHTML = '<div class="empty">Nenhum usuário cadastrado.</div>'; return; }
+      const roleLabel = { gestor: 'Gestor', professor: 'Professor', secretaria: 'Secretaria' };
+      const rows = users.map(u => `<tr>
+        <td style="font-weight:600">${u.name}</td>
+        <td style="color:var(--gray-500);font-size:13px">@${u.username || '—'}</td>
+        <td><span class="role-badge role-${u.role}">${roleLabel[u.role]}</span></td>
+        <td style="color:var(--gray-400);font-size:13px">PIN: ${u.pin}</td>
+        <td><div class="action-icons">
+          <button class="icon-btn" onclick="editUser('${u.id}')">✏️</button>
+          <button class="icon-btn del" onclick="deleteUser('${u.id}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+      document.getElementById('usersWrap').innerHTML = `
+        <table><thead><tr><th>Nome</th><th>Usuário</th><th>Perfil</th><th>Acesso</th><th></th></tr></thead>
+        <tbody>${rows}</tbody></table>`;
+    }
+
+    // --- TYPE MODAL ---
+    function openTypeModal(id = null) {
+      editingTypeId = id;
+      if (id) {
+        const t = lessonTypes.find(x => x.id === id);
+        document.getElementById('typeModalTitle').textContent = 'Editar Tipo de Aula';
+        document.getElementById('tName').value = t.name;
+        document.getElementById('tPrice').value = t.total_price;
+        document.getElementById('tProfPct').value = t.prof_pct;
+        document.getElementById('tClubPct').value = t.club_pct;
+        document.getElementById('tStudents').value = t.num_students;
+        document.getElementById('tColor').value = t.color;
+      } else {
+        document.getElementById('typeModalTitle').textContent = 'Novo Tipo de Aula';
+        document.getElementById('tName').value = '';
+        document.getElementById('tPrice').value = '';
+        document.getElementById('tProfPct').value = '60';
+        document.getElementById('tClubPct').value = '40';
+        document.getElementById('tStudents').value = '1';
+        document.getElementById('tColor').value = '#F97316';
+      }
+      document.getElementById('typeModal').classList.add('open');
+    }
+    function closeTypeModal() { document.getElementById('typeModal').classList.remove('open'); editingTypeId = null; }
+    document.getElementById('typeModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeTypeModal(); });
+
+    function updateClubePct() {
+      const prof = parseFloat(document.getElementById('tProfPct').value) || 0;
+      document.getElementById('tClubPct').value = Math.max(0, 100 - prof);
+    }
+
+    function editType(id) { openTypeModal(id); }
+
+    async function saveType() {
+      const name = document.getElementById('tName').value.trim();
+      const total_price = parseFloat(document.getElementById('tPrice').value);
+      const prof_pct = parseFloat(document.getElementById('tProfPct').value);
+      const club_pct = parseFloat(document.getElementById('tClubPct').value);
+      const num_students = parseInt(document.getElementById('tStudents').value) || 0;
+      const color = document.getElementById('tColor').value;
+      if (!name || !total_price) { alert('Preencha nome e valor.'); return; }
+      const payload = { club_id: auth.clubId, name, total_price, prof_pct, club_pct, num_students, color, sort_order: lessonTypes.length + 1 };
+      if (editingTypeId) await sb.from('lesson_types').update(payload).eq('id', editingTypeId);
+      else await sb.from('lesson_types').insert(payload);
+      closeTypeModal(); await loadAll();
+    }
+
+    async function deleteType(id) {
+      if (!confirm('Excluir este tipo de aula?')) return;
+      await sb.from('lesson_types').delete().eq('id', id);
+      await loadAll();
+    }
+
+    // --- PROF MODAL ---
+    function openProfModal() {
+      editingProfId = null;
+      document.getElementById('profModalTitle').textContent = 'Novo Professor';
+      document.getElementById('pName').value = '';
+      document.getElementById('profModal').classList.add('open');
+    }
+    function editProf(id, name) {
+      editingProfId = id;
+      document.getElementById('profModalTitle').textContent = 'Editar Professor';
+      document.getElementById('pName').value = name;
+      document.getElementById('profModal').classList.add('open');
+    }
+    function closeProfModal() { document.getElementById('profModal').classList.remove('open'); editingProfId = null; }
+    document.getElementById('profModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProfModal(); });
+
+    async function saveProf() {
+      const name = document.getElementById('pName').value.trim();
+      if (!name) { alert('Digite o nome do professor.'); return; }
+      if (editingProfId) await sb.from('professors').update({ name }).eq('id', editingProfId);
+      else await sb.from('professors').insert({ club_id: auth.clubId, name });
+      closeProfModal(); await loadAll();
+    }
+
+    async function deleteProf(id) {
+      if (!confirm('Excluir este professor? As aulas registradas serão mantidas.')) return;
+      await sb.from('professors').update({ active: false }).eq('id', id);
+      await loadAll();
+    }
+
+    // --- USER MODAL ---
+    let editingUserId = null;
+
+    function openUserModal(user = null) {
+      editingUserId = user?.id || null;
+      document.getElementById('uName').value = user?.name || '';
+      document.getElementById('uUsername').value = user?.username || '';
+      document.getElementById('uRole').value = user?.role || 'gestor';
+      document.getElementById('uPin').value = user?.pin || '';
+      const sel = document.getElementById('uProfId');
+      sel.innerHTML = '<option value="">Selecionar professor...</option>' +
+        professors.map(p => `<option value="${p.id}" ${p.id === user?.professor_id ? 'selected' : ''}>${p.name}</option>`).join('');
+      document.getElementById('uProfGroup').style.display = user?.role === 'professor' ? 'block' : 'none';
+      document.getElementById('uSaveBtn').textContent = user ? 'Salvar Alterações' : 'Criar Acesso';
+      document.getElementById('userModal').classList.add('open');
+    }
+    function editUser(id) { openUserModal(users.find(u => u.id === id)); }
+    function closeUserModal() { document.getElementById('userModal').classList.remove('open'); editingUserId = null; }
+    document.getElementById('userModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeUserModal(); });
+
+    function onRoleChange() {
+      const role = document.getElementById('uRole').value;
+      document.getElementById('uProfGroup').style.display = role === 'professor' ? 'block' : 'none';
+    }
+
+    async function saveUser() {
+      const name = document.getElementById('uName').value.trim();
+      const username = document.getElementById('uUsername').value.trim().toLowerCase();
+      const role = document.getElementById('uRole').value;
+      const pin = document.getElementById('uPin').value.trim();
+      const professor_id = role === 'professor' ? document.getElementById('uProfId').value : null;
+      if (!name || !username || !pin) { alert('Preencha nome, usuário e PIN.'); return; }
+      if (role === 'professor' && !professor_id) { alert('Selecione o professor vinculado.'); return; }
+      const payload = { name, username, role, pin, professor_id: professor_id || null };
+      if (editingUserId) {
+        await sb.from('app_users').update(payload).eq('id', editingUserId);
+      } else {
+        await sb.from('app_users').insert({ ...payload, club_id: auth.clubId });
+      }
+      closeUserModal(); await loadAll();
+    }
+
+    async function deleteUser(id) {
+      if (id === auth.userId) { alert('Não é possível excluir o usuário atual.'); return; }
+      if (!confirm('Remover acesso deste usuário?')) return;
+      await sb.from('app_users').update({ active: false }).eq('id', id);
+      await loadAll();
+    }
+
+    loadAll();
+  </script>
+</body>
+</html>
