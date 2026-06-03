@@ -96,6 +96,19 @@
     .chart-wrap { padding: 16px 20px 20px; }
     canvas { max-height: 230px; }
 
+    /* DISTRIB */
+    .distrib-wrap { display: flex; align-items: center; gap: 24px; padding: 16px 22px 20px; }
+    .distrib-chart { width: 140px; height: 140px; flex-shrink: 0; }
+    .distrib-legend { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .distrib-item {}
+    .distrib-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .distrib-item-label { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--gray-700); }
+    .distrib-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .distrib-item-pct { font-size: 14px; font-weight: 700; color: var(--gray-800); }
+    .distrib-track { height: 6px; background: var(--gray-100); border-radius: 99px; overflow: hidden; }
+    .distrib-fill { height: 100%; border-radius: 99px; }
+    .distrib-val { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+
     /* TIPO BARS */
     .tipo-list { padding: 6px 20px 18px; display: flex; flex-direction: column; gap: 10px; }
     .tipo-row { display: flex; align-items: center; gap: 12px; }
@@ -217,21 +230,93 @@
       </div>
     </div>
 
-    <div class="kpi-grid">
+    <!-- KPIs gestor (4 cards com clube) -->
+    <div class="kpi-grid" id="dKpiGestor" style="display:none">
+      <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Receita Total</span></div><div class="kpi-value orange" id="dKpiTotal">—</div><div class="kpi-sub" id="dKpiTotalSub">—</div></div>
+      <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Repasse Clube</span></div><div class="kpi-value green" id="dKpiClube">—</div><div class="kpi-sub" id="dKpiClubeSub">—</div></div>
       <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Total de Aulas</span></div><div class="kpi-value purple" id="dKpiAulas">—</div><div class="kpi-sub" id="dKpiAulasSub">—</div></div>
       <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Total de Alunos</span></div><div class="kpi-value purple" id="dKpiAlunos">—</div><div class="kpi-sub" id="dKpiAlunosSub">—</div></div>
-      <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Total Recebido</span></div><div class="kpi-value orange" id="dKpiProf">—</div><div class="kpi-sub" id="dKpiProfSub">—</div></div>
+    </div>
+
+    <!-- KPIs professor (sem clube) -->
+    <div class="kpi-grid" id="dKpiProf" style="display:none">
+      <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Total de Aulas</span></div><div class="kpi-value purple" id="dKpiAulas2">—</div><div class="kpi-sub" id="dKpiAulasSub2">—</div></div>
+      <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Total de Alunos</span></div><div class="kpi-value purple" id="dKpiAlunos2">—</div><div class="kpi-sub" id="dKpiAlunosSub2">—</div></div>
+      <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Total Recebido</span></div><div class="kpi-value orange" id="dKpiProfVal">—</div><div class="kpi-sub" id="dKpiProfSub">—</div></div>
       <div class="kpi-card"><div class="kpi-card-top"><span class="kpi-label">Média por Aula</span></div><div class="kpi-value" id="dKpiMedia">—</div><div class="kpi-sub" id="dKpiMediaSub">—</div></div>
     </div>
 
-    <div class="grid-5-7">
+    <!-- ROW 1: Aulas por Tipo + Distribuição (gestor only) / Evolução (prof) -->
+    <div class="grid-5-7" id="dRowGestor1" style="display:none">
       <div class="card">
         <div class="card-header"><h2>Aulas por Tipo</h2></div>
         <div class="tipo-list" id="dTipoList"><div class="empty"><span class="spinner"></span></div></div>
       </div>
       <div class="card">
+        <div class="card-header"><h2>Distribuição de Receita</h2></div>
+        <div class="distrib-wrap">
+          <div class="distrib-chart"><canvas id="dDistribChart"></canvas></div>
+          <div class="distrib-legend">
+            <div class="distrib-item">
+              <div class="distrib-item-header">
+                <span class="distrib-item-label"><span class="distrib-dot" style="background:var(--orange)"></span>Professor</span>
+                <span class="distrib-item-pct" id="dDistribProfPct">—</span>
+              </div>
+              <div class="distrib-track"><div class="distrib-fill" style="background:var(--orange)" id="dDistribProfBar"></div></div>
+              <div class="distrib-val" id="dDistribProfVal">—</div>
+            </div>
+            <div class="distrib-item">
+              <div class="distrib-item-header">
+                <span class="distrib-item-label"><span class="distrib-dot" style="background:var(--purple)"></span>Clube</span>
+                <span class="distrib-item-pct" id="dDistribClubePct">—</span>
+              </div>
+              <div class="distrib-track"><div class="distrib-fill" style="background:var(--purple)" id="dDistribClubeBar"></div></div>
+              <div class="distrib-val" id="dDistribClubeVal">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Evolução + Comparativo por Tipo (gestor only) -->
+    <div class="grid-2" id="dRowGestor2" style="display:none">
+      <div class="card">
         <div class="card-header"><h2>Evolução Mensal</h2></div>
         <div class="chart-wrap"><canvas id="dEvolChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>Receita por Tipo de Aula</h2></div>
+        <div class="chart-wrap"><canvas id="dTypeChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ROW resumo gestor -->
+    <div class="card" id="dRowGestor3" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--gray-100)">
+        <div style="background:white;padding:20px;text-align:center">
+          <div style="font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total de Aulas</div>
+          <div style="font-size:26px;font-weight:700;color:var(--purple)" id="dResAulas">—</div>
+        </div>
+        <div style="background:white;padding:20px;text-align:center">
+          <div style="font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Receita Total</div>
+          <div style="font-size:26px;font-weight:700;color:var(--orange)" id="dResReceita">—</div>
+        </div>
+        <div style="background:white;padding:20px;text-align:center">
+          <div style="font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Média por Aula</div>
+          <div style="font-size:26px;font-weight:700" id="dResMedia">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visão simplificada para professor -->
+    <div class="grid-5-7" id="dRowProf1" style="display:none">
+      <div class="card">
+        <div class="card-header"><h2>Aulas por Tipo</h2></div>
+        <div class="tipo-list" id="dTipoListProf"><div class="empty"><span class="spinner"></span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>Evolução Mensal</h2></div>
+        <div class="chart-wrap"><canvas id="dEvolChartProf"></canvas></div>
       </div>
     </div>
   </div>
@@ -475,28 +560,113 @@
   }
 
   // ── DASHBOARD TAB ──
+  let dDistribChartInst = null, dTypeChartInst = null;
+
   function renderDash() {
     const lessons = filterBy(allLessons, periodDash, customDash);
     const aulas = lessons.length;
     const alunos = lessons.reduce((s, l) => s + (l.students?.length || 0), 0);
     const profVal = lessons.reduce((s, l) => s + Number(l.prof_value), 0);
     const clubeVal = lessons.reduce((s, l) => s + Number(l.club_value), 0);
+    const totalVal = profVal + clubeVal;
+    const mediaAula = aulas > 0 ? totalVal / aulas : 0;
 
-    const mediaAula = aulas > 0 ? profVal / aulas : 0;
-    document.getElementById('dKpiAulas').textContent = aulas;
-    document.getElementById('dKpiAulasSub').textContent = alunos > 0 ? `${alunos} alunos atendidos` : '—';
-    document.getElementById('dKpiAlunos').textContent = alunos;
-    document.getElementById('dKpiAlunosSub').textContent = aulas > 0 ? `Média ${(alunos/aulas).toFixed(1)} por aula` : '—';
-    document.getElementById('dKpiProf').textContent = fmt(profVal);
-    document.getElementById('dKpiProfSub').textContent = aulas > 0 ? `${aulas} aulas no período` : '—';
-    document.getElementById('dKpiMedia').textContent = fmt(mediaAula);
-    document.getElementById('dKpiMediaSub').textContent = 'por aula';
+    if (auth.role === 'gestor') {
+      // Mostra visão gestor
+      document.getElementById('dKpiGestor').style.display = 'grid';
+      document.getElementById('dKpiProf').style.display = 'none';
+      document.getElementById('dRowGestor1').style.display = 'grid';
+      document.getElementById('dRowGestor2').style.display = 'grid';
+      document.getElementById('dRowGestor3').style.display = 'block';
+      document.getElementById('dRowProf1').style.display = 'none';
 
-    renderDashTipos(lessons);
-    renderDashEvol();
+      document.getElementById('dKpiTotal').textContent = fmt(totalVal);
+      document.getElementById('dKpiTotalSub').textContent = aulas > 0 ? `Média ${fmt(mediaAula)}/aula` : '—';
+      document.getElementById('dKpiClube').textContent = fmt(clubeVal);
+      document.getElementById('dKpiClubeSub').textContent = totalVal > 0 ? `${Math.round(clubeVal/totalVal*100)}% da receita total` : '—';
+      document.getElementById('dKpiAulas').textContent = aulas;
+      document.getElementById('dKpiAulasSub').textContent = alunos > 0 ? `${alunos} alunos atendidos` : '—';
+      document.getElementById('dKpiAlunos').textContent = alunos;
+      document.getElementById('dKpiAlunosSub').textContent = aulas > 0 ? `Média ${(alunos/aulas).toFixed(1)} por aula` : '—';
+      document.getElementById('dResAulas').textContent = aulas;
+      document.getElementById('dResReceita').textContent = fmt(totalVal);
+      document.getElementById('dResMedia').textContent = fmt(mediaAula);
+
+      renderDashTipos(lessons, 'dTipoList');
+      renderDistrib(profVal, clubeVal);
+      renderDashEvol();
+      renderDashTypeChart(lessons);
+    } else {
+      // Visão professor
+      document.getElementById('dKpiGestor').style.display = 'none';
+      document.getElementById('dKpiProf').style.display = 'grid';
+      document.getElementById('dRowGestor1').style.display = 'none';
+      document.getElementById('dRowGestor2').style.display = 'none';
+      document.getElementById('dRowGestor3').style.display = 'none';
+      document.getElementById('dRowProf1').style.display = 'grid';
+
+      document.getElementById('dKpiAulas2').textContent = aulas;
+      document.getElementById('dKpiAulasSub2').textContent = alunos > 0 ? `${alunos} alunos atendidos` : '—';
+      document.getElementById('dKpiAlunos2').textContent = alunos;
+      document.getElementById('dKpiAlunosSub2').textContent = aulas > 0 ? `Média ${(alunos/aulas).toFixed(1)} por aula` : '—';
+      document.getElementById('dKpiProfVal').textContent = fmt(profVal);
+      document.getElementById('dKpiProfSub').textContent = aulas > 0 ? `${aulas} aulas no período` : '—';
+      document.getElementById('dKpiMedia').textContent = fmt(aulas > 0 ? profVal/aulas : 0);
+      document.getElementById('dKpiMediaSub').textContent = 'por aula';
+
+      renderDashTipos(lessons, 'dTipoListProf');
+      renderDashEvolProf();
+    }
   }
 
-  function renderDashTipos(lessons) {
+  function renderDistrib(profVal, clubeVal) {
+    const grand = profVal + clubeVal || 1;
+    const profPct = Math.round(profVal/grand*100);
+    const clubePct = 100 - profPct;
+    document.getElementById('dDistribProfPct').textContent = profPct + '%';
+    document.getElementById('dDistribProfBar').style.width = profPct + '%';
+    document.getElementById('dDistribProfVal').textContent = fmt(profVal);
+    document.getElementById('dDistribClubePct').textContent = clubePct + '%';
+    document.getElementById('dDistribClubeBar').style.width = clubePct + '%';
+    document.getElementById('dDistribClubeVal').textContent = fmt(clubeVal);
+    if (dDistribChartInst) dDistribChartInst.destroy();
+    dDistribChartInst = new Chart(document.getElementById('dDistribChart'), {
+      type: 'doughnut',
+      data: { datasets: [{ data: [profVal||1, clubeVal||1], backgroundColor: ['#F97316','#8B5CF6'], borderWidth: 3, borderColor: 'white' }] },
+      options: { responsive: true, cutout: '72%', plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+    });
+  }
+
+  function renderDashTypeChart(lessons) {
+    const byType = {};
+    lessons.forEach(l => {
+      const name = l.lesson_types?.name || 'Outro';
+      const color = l.lesson_types?.color || '#9CA3AF';
+      if (!byType[name]) byType[name] = { profVal: 0, clubeVal: 0, color };
+      byType[name].profVal += Number(l.prof_value);
+      byType[name].clubeVal += Number(l.club_value);
+    });
+    const sorted = Object.entries(byType).sort((a,b) => b[1].profVal - a[1].profVal);
+    if (dTypeChartInst) dTypeChartInst.destroy();
+    if (!sorted.length) return;
+    dTypeChartInst = new Chart(document.getElementById('dTypeChart'), {
+      type: 'bar',
+      data: {
+        labels: sorted.map(([n]) => n),
+        datasets: [
+          { label: 'Professor', data: sorted.map(([,d]) => d.profVal), backgroundColor: '#F97316', borderRadius: 6, barPercentage: .55 },
+          { label: 'Clube', data: sorted.map(([,d]) => d.clubeVal), backgroundColor: '#8B5CF6', borderRadius: 6, barPercentage: .55 },
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 12 } } } },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: '#F3F4F6' } } }
+      }
+    });
+  }
+
+  function renderDashTipos(lessons, elId) {
     const byType = {};
     lessons.forEach(l => {
       const name = l.lesson_types?.name || 'Outro';
@@ -506,9 +676,9 @@
       byType[name].total += Number(l.prof_value);
     });
     const sorted = Object.entries(byType).sort((a, b) => b[1].count - a[1].count);
-    if (!sorted.length) { document.getElementById('dTipoList').innerHTML = '<div class="empty">Sem dados neste período</div>'; return; }
+    if (!sorted.length) { document.getElementById(elId).innerHTML = '<div class="empty">Sem dados neste período</div>'; return; }
     const max = sorted[0][1].count;
-    document.getElementById('dTipoList').innerHTML = sorted.map(([name, d]) => `
+    document.getElementById(elId).innerHTML = sorted.map(([name, d]) => `
       <div class="tipo-row">
         <span class="tipo-tag" style="background:${d.color}22;color:${d.color}">${name}</span>
         <div class="tipo-bar-wrap">
@@ -517,6 +687,32 @@
         <span class="tipo-count">${d.count} aulas</span>
         <span class="tipo-val">${fmt(d.total)}</span>
       </div>`).join('');
+  }
+
+  function renderDashEvolProf() {
+    const now = new Date();
+    const months = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5-i), 1);
+      return { label: d.toLocaleString('pt-BR', { month: 'short', year: '2-digit' }), year: d.getFullYear(), month: d.getMonth() };
+    });
+    const aulasData = months.map(m => allLessons.filter(l => { const d = new Date(l.date); return d.getFullYear()===m.year && d.getMonth()===m.month; }).length);
+    const profData = months.map(m => allLessons.filter(l => { const d = new Date(l.date); return d.getFullYear()===m.year && d.getMonth()===m.month; }).reduce((s,l) => s+Number(l.prof_value), 0));
+    if (dEvolChartInst) dEvolChartInst.destroy();
+    dEvolChartInst = new Chart(document.getElementById('dEvolChartProf'), {
+      type: 'line',
+      data: {
+        labels: months.map(m => m.label),
+        datasets: [
+          { label: 'Aulas', data: aulasData, borderColor: '#8B5CF6', backgroundColor: 'rgba(139,92,246,.08)', tension: .4, fill: true, pointBackgroundColor: '#8B5CF6', borderWidth: 2, yAxisID: 'y' },
+          { label: 'Recebido (R$)', data: profData, borderColor: '#F97316', backgroundColor: 'rgba(249,115,22,.05)', tension: .4, fill: false, pointBackgroundColor: '#F97316', borderWidth: 2, yAxisID: 'y1' },
+        ]
+      },
+      options: {
+        responsive: true, interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 12 } } } },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: '#F3F4F6' }, position: 'left' }, y1: { beginAtZero: true, grid: { display: false }, position: 'right' } }
+      }
+    });
   }
 
   function renderDashEvol() {
