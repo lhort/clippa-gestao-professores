@@ -522,7 +522,7 @@
     const profIds = professors.map(p => p.id);
     const { data: club } = await sb.from('clubs').select('name').eq('id', auth.clubId).single();
     const { data: lessons } = profIds.length
-      ? await sb.from('lessons').select('*, lesson_types(name, color)').in('professor_id', profIds).order('date', { ascending: false })
+      ? await sb.from('lessons').select('*, lesson_types(name, color)').in('professor_id', profIds).order('created_at', { ascending: false })
       : { data: [] };
 
     allLessons = lessons || [];

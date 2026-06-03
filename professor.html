@@ -455,7 +455,7 @@
   async function loadData() {
     const [{ data: prof }, { data: lessons }, { data: types }, { data: entries }] = await Promise.all([
       sb.from('professors').select('*').eq('id', profId).single(),
-      sb.from('lessons').select('*, lesson_types(name, color)').eq('professor_id', profId).order('date', { ascending: false }),
+      sb.from('lessons').select('*, lesson_types(name, color)').eq('professor_id', profId).order('created_at', { ascending: false }),
       sb.from('lesson_types').select('*').eq('club_id', auth.clubId).eq('active', true).order('sort_order'),
       sb.from('financial_entries').select('*').eq('professor_id', profId).order('date', { ascending: false }),
     ]);
