@@ -193,6 +193,11 @@
         <label class="form-label">Nome</label>
         <input type="text" class="form-input" id="pName" placeholder="Nome completo">
       </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp</label>
+        <input type="text" class="form-input" id="pWhatsapp" placeholder="55 (48) 99999-9999">
+        <span style="font-size:11px;color:var(--gray-400);margin-top:4px;display:block">Formato internacional. Ex: 5548999999999</span>
+      </div>
       <div class="modal-footer">
         <button class="btn-cancel btn" onclick="closeProfModal()">Cancelar</button>
         <button class="btn btn-primary" onclick="saveProf()">Salvar</button>
@@ -379,12 +384,15 @@
       editingProfId = null;
       document.getElementById('profModalTitle').textContent = 'Novo Professor';
       document.getElementById('pName').value = '';
+      document.getElementById('pWhatsapp').value = '';
       document.getElementById('profModal').classList.add('open');
     }
     function editProf(id, name) {
       editingProfId = id;
+      const prof = professors.find(p => p.id === id);
       document.getElementById('profModalTitle').textContent = 'Editar Professor';
       document.getElementById('pName').value = name;
+      document.getElementById('pWhatsapp').value = prof?.whatsapp || '';
       document.getElementById('profModal').classList.add('open');
     }
     function closeProfModal() { document.getElementById('profModal').classList.remove('open'); editingProfId = null; }
@@ -392,9 +400,11 @@
 
     async function saveProf() {
       const name = document.getElementById('pName').value.trim();
+      const whatsapp = document.getElementById('pWhatsapp').value.trim().replace(/\D/g,'');
       if (!name) { alert('Digite o nome do professor.'); return; }
-      if (editingProfId) await sb.from('professors').update({ name }).eq('id', editingProfId);
-      else await sb.from('professors').insert({ club_id: auth.clubId, name });
+      const payload = { name, whatsapp: whatsapp || null };
+      if (editingProfId) await sb.from('professors').update(payload).eq('id', editingProfId);
+      else await sb.from('professors').insert({ ...payload, club_id: auth.clubId });
       closeProfModal(); await loadAll();
     }
 

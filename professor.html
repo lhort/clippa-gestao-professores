@@ -96,6 +96,36 @@
     .chart-wrap { padding: 16px 20px 20px; }
     canvas { max-height: 230px; }
 
+    /* AGENDA */
+    .agenda-day-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--gray-50); }
+    .agenda-day-row:last-child { border-bottom: none; }
+    .agenda-day-label { width: 90px; font-size: 14px; font-weight: 600; color: var(--gray-800); flex-shrink: 0; }
+    .agenda-day-times { flex: 1; font-size: 13px; color: var(--gray-500); }
+    .agenda-day-empty { font-size: 13px; color: var(--gray-300); font-style: italic; }
+    .agenda-slot-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--orange-light); color: var(--orange); border: 1px solid #FED7AA; border-radius: 8px; padding: 5px 10px; font-size: 12px; font-weight: 600; margin: 2px; }
+    .agenda-slot-tag button { background: none; border: none; cursor: pointer; color: var(--orange); font-size: 14px; line-height: 1; padding: 0; }
+
+    /* RESERVAS */
+    .reserva-row { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--gray-50); }
+    .reserva-row:last-child { border-bottom: none; }
+    .reserva-date { text-align: center; min-width: 44px; flex-shrink: 0; }
+    .reserva-date-day { font-size: 20px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+    .reserva-date-mon { font-size: 10px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; }
+    .reserva-divider { width: 1px; height: 40px; background: var(--gray-100); flex-shrink: 0; }
+    .reserva-time { font-size: 15px; font-weight: 700; color: var(--gray-800); min-width: 54px; }
+    .reserva-info { flex: 1; min-width: 0; }
+    .reserva-student { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+    .reserva-detail { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+    .reserva-status { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .status-pendente { background: #FEF3C7; color: #D97706; }
+    .status-confirmada { background: #D1FAE5; color: #065F46; }
+    .status-recusada { background: #FEE2E2; color: #991B1B; }
+    .status-cancelada { background: var(--gray-100); color: var(--gray-500); }
+    .reserva-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-confirmar { background: var(--green); color: white; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .15s; }
+    .btn-recusar { background: white; color: var(--red); border: 1px solid var(--red); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: .15s; }
+    .btn-wpp { background: #25D366; color: white; border: none; border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; cursor: pointer; }
+
     /* DISTRIB */
     .distrib-wrap { display: flex; align-items: center; gap: 24px; padding: 16px 22px 20px; }
     .distrib-chart { width: 140px; height: 140px; flex-shrink: 0; }
@@ -205,6 +235,8 @@
       <button class="tab-btn active" onclick="switchTab('dash', this)">Dashboard</button>
       <button class="tab-btn" onclick="switchTab('aulas', this)">Aulas</button>
       <button class="tab-btn" onclick="switchTab('financeiro', this)">Financeiro</button>
+      <button class="tab-btn" onclick="switchTab('agenda', this)">Agenda</button>
+      <button class="tab-btn" onclick="switchTab('reservas', this)">Reservas <span id="reservasBadge" style="display:none;background:var(--orange);color:white;border-radius:99px;padding:1px 7px;font-size:11px;margin-left:4px">0</span></button>
     </div>
   </div>
 </div>
@@ -417,6 +449,52 @@
 
 </main>
 
+  <!-- ── TAB: AGENDA ── -->
+  <div id="tab-agenda" style="display:none">
+
+    <!-- Agenda Padrão -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <h2>Agenda Padrão</h2>
+        <span style="font-size:12px;color:var(--gray-400)">Horários recorrentes toda semana</span>
+      </div>
+      <div style="padding:0 22px 20px" id="agendaPadraoWrap">
+        <div class="loading"><span class="spinner"></span>Carregando...</div>
+      </div>
+      <div style="padding:0 22px 20px" id="addDiaWrap" style="display:none">
+        <button class="btn btn-outline" onclick="openAddDiaModal()" style="width:100%;justify-content:center">+ Adicionar dia</button>
+      </div>
+    </div>
+
+    <!-- Agenda Pontual -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Exceções Pontuais</h2>
+        <button class="btn btn-outline" onclick="openAddPontualModal()">+ Adicionar</button>
+      </div>
+      <div id="agendaPontualWrap">
+        <div class="loading"><span class="spinner"></span>Carregando...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: RESERVAS ── -->
+  <div id="tab-reservas" style="display:none">
+    <div class="filter-bar" style="margin-top:4px">
+      <div class="period-group">
+        <span class="period-label">Status:</span>
+        <button class="period-pill active" onclick="setReservaFilter('todas', this)">Todas</button>
+        <button class="period-pill" onclick="setReservaFilter('pendente', this)">Pendentes</button>
+        <button class="period-pill" onclick="setReservaFilter('confirmada', this)">Confirmadas</button>
+        <button class="period-pill" onclick="setReservaFilter('recusada', this)">Recusadas</button>
+        <button class="period-pill" onclick="setReservaFilter('cancelada', this)">Canceladas</button>
+      </div>
+    </div>
+    <div class="card">
+      <div id="reservasWrap"><div class="loading"><span class="spinner"></span>Carregando...</div></div>
+    </div>
+  </div>
+
 <!-- MODAL: Nova Aula -->
 <div class="modal-overlay" id="aulaModal">
   <div class="modal">
@@ -454,6 +532,89 @@
     <div class="modal-footer">
       <button class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-primary" id="saveAulaBtn" onclick="saveAula()">Salvar Aula</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Adicionar Dia Agenda Padrão -->
+<div class="modal-overlay" id="diaModal">
+  <div class="modal">
+    <h2>Configurar Dia</h2>
+    <div class="form-group">
+      <label class="form-label">Dia da Semana</label>
+      <select class="form-input" id="diaDow">
+        <option value="1">Segunda-feira</option>
+        <option value="2">Terça-feira</option>
+        <option value="3">Quarta-feira</option>
+        <option value="4">Quinta-feira</option>
+        <option value="5">Sexta-feira</option>
+        <option value="6">Sábado</option>
+        <option value="0">Domingo</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Início</label>
+        <input type="time" class="form-input" id="diaStart" value="07:00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fim</label>
+        <input type="time" class="form-input" id="diaEnd" value="12:00">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Duração do slot</label>
+      <select class="form-input" id="diaSlot">
+        <option value="30">30 minutos</option>
+        <option value="60" selected>1 hora</option>
+        <option value="90">1h30</option>
+        <option value="120">2 horas</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" onclick="closeDiaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveDia()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Exceção Pontual -->
+<div class="modal-overlay" id="pontualModal">
+  <div class="modal">
+    <h2>Exceção Pontual</h2>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="form-input" id="pontualType" onchange="onPontualTypeChange()">
+        <option value="bloqueado">Bloquear dia/horário (não vou atender)</option>
+        <option value="disponivel">Adicionar disponibilidade extra</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input type="date" class="form-input" id="pontualDate">
+      </div>
+    </div>
+    <div id="pontualTimeGroup">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Início (opcional)</label>
+          <input type="time" class="form-input" id="pontualStart">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fim (opcional)</label>
+          <input type="time" class="form-input" id="pontualEnd">
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--gray-400);margin-top:-8px">Deixe em branco para bloquear/liberar o dia inteiro</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observação</label>
+      <input type="text" class="form-input" id="pontualNotes" placeholder="Ex: Viagem, feriado...">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" onclick="closePontualModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePontual()">Salvar</button>
     </div>
   </div>
 </div>
@@ -505,11 +666,16 @@
   }
 
   function switchTab(tab, btn) {
-    ['dash','aulas','financeiro'].forEach(t => document.getElementById(`tab-${t}`).style.display = 'none');
+    ['dash','aulas','financeiro','agenda','reservas'].forEach(t => {
+      const el = document.getElementById(`tab-${t}`);
+      if (el) el.style.display = 'none';
+    });
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`tab-${tab}`).style.display = 'block';
     btn.classList.add('active');
     if (tab === 'financeiro') renderFinanceiro();
+    if (tab === 'agenda') loadAgenda();
+    if (tab === 'reservas') loadReservas();
   }
 
   // ── PERIOD SETTERS ──
@@ -587,6 +753,7 @@
     populateTypeSelect();
     renderDash();
     renderAulas();
+    loadReservas(); // para mostrar badge de pendentes
   }
 
   // ── DASHBOARD TAB ──
@@ -1064,6 +1231,204 @@
     if (!confirm('Excluir esta aula?')) return;
     await sb.from('lessons').delete().eq('id', id);
     await loadData();
+  }
+
+  // ── AGENDA ──
+  const DAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const DAYS_FULL = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  let agendaPadrao = [], agendaPontual = [];
+
+  async function loadAgenda() {
+    const [{ data: pad }, { data: pont }] = await Promise.all([
+      sb.from('agenda_padrao').select('*').eq('professor_id', profId).eq('active', true).order('day_of_week'),
+      sb.from('agenda_pontual').select('*').eq('professor_id', profId).order('date', { ascending: false }).limit(30),
+    ]);
+    agendaPadrao = pad || [];
+    agendaPontual = pont || [];
+    renderAgendaPadrao();
+    renderAgendaPontual();
+  }
+
+  function renderAgendaPadrao() {
+    const canEdit = auth.role === 'gestor' || auth.role === 'professor';
+    const byDay = {};
+    agendaPadrao.forEach(a => { if (!byDay[a.day_of_week]) byDay[a.day_of_week] = []; byDay[a.day_of_week].push(a); });
+
+    let html = '';
+    for (let d = 1; d <= 6; d++) {
+      const slots = byDay[d] || [];
+      html += `<div class="agenda-day-row">
+        <span class="agenda-day-label">${DAYS_FULL[d].split('-')[0]}</span>
+        <div class="agenda-day-times" style="flex:1">
+          ${slots.length ? slots.map(s => `
+            <span class="agenda-slot-tag">
+              ${s.start_time.slice(0,5)} – ${s.end_time.slice(0,5)} · ${s.slot_minutes}min
+              ${canEdit ? `<button onclick="deleteAgendaPadrao('${s.id}')">×</button>` : ''}
+            </span>`).join('') : `<span class="agenda-day-empty">Sem horários</span>`}
+        </div>
+      </div>`;
+    }
+    // Domingo
+    const domSlots = byDay[0] || [];
+    html += `<div class="agenda-day-row">
+      <span class="agenda-day-label">Domingo</span>
+      <div class="agenda-day-times" style="flex:1">
+        ${domSlots.length ? domSlots.map(s => `
+          <span class="agenda-slot-tag">
+            ${s.start_time.slice(0,5)} – ${s.end_time.slice(0,5)} · ${s.slot_minutes}min
+            ${canEdit ? `<button onclick="deleteAgendaPadrao('${s.id}')">×</button>` : ''}
+          </span>`).join('') : `<span class="agenda-day-empty">Sem horários</span>`}
+      </div>
+    </div>`;
+
+    document.getElementById('agendaPadraoWrap').innerHTML = html;
+    document.getElementById('addDiaWrap').style.display = canEdit ? 'block' : 'none';
+  }
+
+  function renderAgendaPontual() {
+    const canEdit = auth.role === 'gestor' || auth.role === 'professor';
+    if (!agendaPontual.length) {
+      document.getElementById('agendaPontualWrap').innerHTML = '<div class="empty">Nenhuma exceção cadastrada.</div>';
+      return;
+    }
+    const rows = agendaPontual.map(p => {
+      const d = new Date(p.date + 'T12:00:00');
+      const isBloq = p.type === 'bloqueado';
+      const timeStr = p.start_time ? `${p.start_time.slice(0,5)} – ${p.end_time?.slice(0,5) || '?'}` : 'Dia inteiro';
+      return `<div style="display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--gray-50)">
+        <span style="font-size:13px;font-weight:600;color:var(--gray-800);min-width:90px">${d.toLocaleDateString('pt-BR')}</span>
+        <span class="agenda-slot-tag" style="${isBloq ? 'background:#FEE2E2;color:#991B1B;border-color:#FCA5A5' : ''}">${isBloq ? 'Bloqueado' : 'Extra'} · ${timeStr}</span>
+        <span style="font-size:12px;color:var(--gray-400);flex:1">${p.notes || ''}</span>
+        ${canEdit ? `<button class="icon-btn del" onclick="deleteAgendaPontual('${p.id}')">🗑️</button>` : ''}
+      </div>`;
+    }).join('');
+    document.getElementById('agendaPontualWrap').innerHTML = rows;
+  }
+
+  // Modal dia padrão
+  function openAddDiaModal() {
+    document.getElementById('diaModal').classList.add('open');
+  }
+  function closeDiaModal() { document.getElementById('diaModal').classList.remove('open'); }
+  document.getElementById('diaModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDiaModal(); });
+
+  async function saveDia() {
+    const day_of_week = parseInt(document.getElementById('diaDow').value);
+    const start_time = document.getElementById('diaStart').value;
+    const end_time = document.getElementById('diaEnd').value;
+    const slot_minutes = parseInt(document.getElementById('diaSlot').value);
+    if (!start_time || !end_time || start_time >= end_time) { alert('Horário inválido.'); return; }
+    await sb.from('agenda_padrao').insert({ professor_id: profId, day_of_week, start_time, end_time, slot_minutes });
+    closeDiaModal();
+    await loadAgenda();
+  }
+
+  async function deleteAgendaPadrao(id) {
+    if (!confirm('Remover este horário?')) return;
+    await sb.from('agenda_padrao').delete().eq('id', id);
+    await loadAgenda();
+  }
+
+  // Modal pontual
+  function openAddPontualModal() {
+    document.getElementById('pontualDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('pontualModal').classList.add('open');
+  }
+  function closePontualModal() { document.getElementById('pontualModal').classList.remove('open'); }
+  document.getElementById('pontualModal').addEventListener('click', e => { if (e.target === e.currentTarget) closePontualModal(); });
+
+  async function savePontual() {
+    const type = document.getElementById('pontualType').value;
+    const date = document.getElementById('pontualDate').value;
+    const start_time = document.getElementById('pontualStart').value || null;
+    const end_time = document.getElementById('pontualEnd').value || null;
+    const notes = document.getElementById('pontualNotes').value.trim();
+    if (!date) { alert('Selecione a data.'); return; }
+    await sb.from('agenda_pontual').insert({ professor_id: profId, type, date, start_time, end_time, notes: notes || null });
+    closePontualModal();
+    await loadAgenda();
+  }
+
+  async function deleteAgendaPontual(id) {
+    if (!confirm('Remover esta exceção?')) return;
+    await sb.from('agenda_pontual').delete().eq('id', id);
+    await loadAgenda();
+  }
+
+  // ── RESERVAS ──
+  let allReservas = [];
+  let reservaFilter = 'todas';
+
+  async function loadReservas() {
+    const { data } = await sb.from('reservas')
+      .select('*, lesson_types(name, color)')
+      .eq('professor_id', profId)
+      .order('date', { ascending: true })
+      .order('time', { ascending: true });
+    allReservas = data || [];
+    const pendentes = allReservas.filter(r => r.status === 'pendente').length;
+    const badge = document.getElementById('reservasBadge');
+    if (pendentes > 0) { badge.style.display = 'inline'; badge.textContent = pendentes; }
+    else badge.style.display = 'none';
+    renderReservas();
+  }
+
+  function setReservaFilter(f, btn) {
+    reservaFilter = f;
+    document.querySelectorAll('#tab-reservas .period-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderReservas();
+  }
+
+  function renderReservas() {
+    const filtered = reservaFilter === 'todas' ? allReservas : allReservas.filter(r => r.status === reservaFilter);
+    if (!filtered.length) {
+      document.getElementById('reservasWrap').innerHTML = '<div class="empty">Nenhuma reserva encontrada.</div>';
+      return;
+    }
+    const statusLabel = { pendente: 'Pendente', confirmada: 'Confirmada', recusada: 'Recusada', cancelada: 'Cancelada' };
+    const rows = filtered.map(r => {
+      const d = new Date(r.date + 'T12:00:00');
+      const day = d.getDate().toString().padStart(2,'0');
+      const mon = d.toLocaleString('pt-BR', { month: 'short' }).replace('.','').toUpperCase();
+      const typeName = r.lesson_types?.name || '—';
+      const typeColor = r.lesson_types?.color || '#9CA3AF';
+      const canAct = auth.role === 'gestor' || auth.role === 'professor';
+      const actions = r.status === 'pendente' && canAct ? `
+        <div class="reserva-actions">
+          <button class="btn-confirmar" onclick="confirmarReserva('${r.id}')">Confirmar</button>
+          <button class="btn-recusar" onclick="recusarReserva('${r.id}')">Recusar</button>
+        </div>` : '';
+      const wppBtn = r.student_phone ? `<button class="btn-wpp" onclick="abrirWpp('${r.student_phone}','${r.student_name}','${d.toLocaleDateString('pt-BR')}','${r.time?.slice(0,5)}','${typeName}')" title="WhatsApp">💬</button>` : '';
+      return `<div class="reserva-row">
+        <div class="reserva-date"><div class="reserva-date-day">${day}</div><div class="reserva-date-mon">${mon}</div></div>
+        <div class="reserva-divider"></div>
+        <div class="reserva-time">${r.time?.slice(0,5)}</div>
+        <div class="reserva-info">
+          <div class="reserva-student">${r.student_name}</div>
+          <div class="reserva-detail">${r.student_phone} · <span style="color:${typeColor};font-weight:600">${typeName}</span>${r.notes ? ' · ' + r.notes : ''}</div>
+        </div>
+        <span class="reserva-status status-${r.status}">${statusLabel[r.status]}</span>
+        ${actions}
+        ${wppBtn}
+      </div>`;
+    }).join('');
+    document.getElementById('reservasWrap').innerHTML = rows;
+  }
+
+  async function confirmarReserva(id) {
+    await sb.from('reservas').update({ status: 'confirmada' }).eq('id', id);
+    await loadReservas();
+  }
+  async function recusarReserva(id) {
+    if (!confirm('Recusar esta reserva?')) return;
+    await sb.from('reservas').update({ status: 'recusada' }).eq('id', id);
+    await loadReservas();
+  }
+
+  function abrirWpp(phone, nome, data, hora, tipo) {
+    const msg = encodeURIComponent(`Olá ${nome}! Sua reserva de ${tipo} no dia ${data} às ${hora} foi confirmada. Te esperamos! 🎾`);
+    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
   }
 
   loadData();
