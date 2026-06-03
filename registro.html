@@ -24,7 +24,7 @@
     .btn-logout { font-size: 13px; color: var(--gray-500); background: none; border: 1px solid var(--gray-200); padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: .15s; }
     .btn-logout:hover { background: var(--gray-100); }
 
-    main { max-width: 560px; margin: 0 auto; padding: 40px 24px 64px; }
+    main { max-width: 860px; margin: 0 auto; padding: 40px 24px 64px; }
     .page-header { margin-bottom: 28px; }
     .page-header h1 { font-size: 22px; font-weight: 700; }
     .page-header p { font-size: 14px; color: var(--gray-400); margin-top: 4px; }
@@ -68,6 +68,50 @@
     .loading { padding: 20px; text-align: center; color: var(--gray-400); font-size: 14px; }
     .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--gray-200); border-top-color: var(--orange); border-radius: 50%; animation: spin .6s linear infinite; margin-right: 8px; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Histórico */
+    .hist-header { margin: 32px 0 14px; }
+    .hist-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .hist-header h2 { font-size: 17px; font-weight: 700; color: var(--gray-900); }
+    .hist-header span { font-size: 13px; color: var(--gray-400); }
+    .hist-filters { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .hist-pill { padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 600; border: 1px solid var(--gray-200); background: white; color: var(--gray-500); cursor: pointer; transition: .15s; }
+    .hist-pill:hover { border-color: var(--orange); color: var(--orange); }
+    .hist-pill.active { background: var(--orange); border-color: var(--orange); color: white; }
+    .hist-custom { display: none; align-items: center; gap: 8px; background: white; border: 1px solid var(--orange); border-radius: 99px; padding: 5px 14px; }
+    .hist-custom.open { display: flex; }
+    .hist-custom label { font-size: 11px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; }
+    .hist-custom input[type="date"] { border: none; outline: none; font-size: 12px; font-weight: 600; color: var(--gray-800); background: transparent; cursor: pointer; font-family: inherit; }
+    .hist-custom-apply { background: var(--orange); color: white; border: none; border-radius: 99px; padding: 4px 12px; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 4px; }
+    .hist-card { background: white; border-radius: 16px; border: 1px solid var(--gray-100); box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden; }
+    .hist-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--gray-50); transition: background .1s; }
+    .hist-item:last-child { border-bottom: none; }
+    .hist-item:hover { background: var(--gray-50); }
+    .hist-date { text-align: center; min-width: 40px; }
+    .hist-date-day { font-size: 18px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+    .hist-date-mon { font-size: 10px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; }
+    .hist-divider { width: 1px; height: 36px; background: var(--gray-100); flex-shrink: 0; }
+    .hist-info { flex: 1; min-width: 0; }
+    .hist-prof { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+    .hist-students { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+    .hist-tag { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+    .hist-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .hist-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 7px; font-size: 13px; color: var(--gray-400); transition: .15s; }
+    .hist-btn:hover.edit { color: var(--orange); background: var(--orange-light); }
+    .hist-btn:hover.del { color: #EF4444; background: #FEF2F2; }
+    .hist-empty { padding: 32px; text-align: center; color: var(--gray-400); font-size: 14px; }
+
+    /* Modal edição */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 20px; padding: 32px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+    .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 24px; }
+    .modal-footer { display: flex; gap: 10px; margin-top: 24px; }
+    .modal-footer button { flex: 1; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: .15s; }
+    .btn-modal-cancel { background: var(--gray-100); color: var(--gray-600); }
+    .btn-modal-cancel:hover { background: var(--gray-200); }
+    .btn-modal-save { background: var(--orange); color: white; }
+    .btn-modal-save:hover { background: var(--orange-dark); }
   </style>
 </head>
 <body>
@@ -102,7 +146,74 @@
         <button class="btn-new" onclick="resetForm()">Registrar outra aula</button>
       </div>
     </div>
+
+    <!-- HISTÓRICO -->
+    <div class="hist-header">
+      <div class="hist-header-top">
+        <h2>Histórico de Aulas</h2>
+        <span id="histCount">—</span>
+      </div>
+      <div class="hist-filters">
+        <button class="hist-pill active" onclick="setHistPeriod('mes', this)">Este mês</button>
+        <button class="hist-pill" onclick="setHistPeriod('mes_passado', this)">Mês passado</button>
+        <button class="hist-pill" onclick="setHistPeriod('ano', this)">Este ano</button>
+        <button class="hist-pill" onclick="setHistPeriod('tudo', this)">Todo período</button>
+        <button class="hist-pill" id="histCustomPill" onclick="toggleHistCustom(this)">Personalizado</button>
+        <div class="hist-custom" id="histCustomRange">
+          <label>De</label><input type="date" id="histFrom">
+          <span style="color:var(--gray-300)">→</span>
+          <label>Até</label><input type="date" id="histTo">
+          <button class="hist-custom-apply" onclick="applyHistCustom()">Aplicar</button>
+        </div>
+      </div>
+    </div>
+    <div class="hist-card" id="histList">
+      <div class="loading"><span class="spinner"></span>Carregando...</div>
+    </div>
   </main>
+
+  <!-- MODAL: Editar Aula -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h2>Editar Aula</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+        <div>
+          <label class="form-label">Professor</label>
+          <select class="form-input" id="eProf"></select>
+        </div>
+        <div>
+          <label class="form-label">Data</label>
+          <input type="date" class="form-input" id="eDate">
+        </div>
+      </div>
+      <div style="margin-bottom:18px">
+        <label class="form-label">Tipo de Aula</label>
+        <select class="form-input" id="eType" onchange="onEditTypeChange()"></select>
+      </div>
+      <div style="margin-bottom:18px" id="ePriceGroup" style="display:none">
+        <label class="form-label">Valor da Aula (R$)</label>
+        <input type="number" class="form-input" id="ePrice" min="0" step="0.01" oninput="recalcEdit()">
+      </div>
+      <div class="calc-preview" id="eCalcPreview" style="display:none;background:var(--gray-50);border:none;border-radius:10px;padding:14px 16px;margin-bottom:18px">
+        <div style="display:flex;gap:16px">
+          <div style="flex:1;text-align:center"><div style="font-size:11px;color:var(--gray-400);margin-bottom:3px">Total</div><div style="font-weight:700;font-size:13px" id="ePTotal">—</div></div>
+          <div style="flex:1;text-align:center"><div style="font-size:11px;color:var(--gray-400);margin-bottom:3px">Professor</div><div style="font-weight:700;font-size:13px;color:var(--orange)" id="ePProf">—</div></div>
+        </div>
+      </div>
+      <div style="margin-bottom:18px">
+        <label class="form-label">Alunos</label>
+        <div id="eStudentInputs" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div style="margin-bottom:4px">
+        <label class="form-label">Observações</label>
+        <input type="text" class="form-input" id="eNotes" placeholder="Opcional">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="closeEditModal()">Cancelar</button>
+        <button class="btn-modal-save" id="eSaveBtn" onclick="saveEdit()">Salvar</button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
@@ -118,16 +229,6 @@
     function fmt(n) { return 'R$ ' + Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2 }); }
 
     let professors = [], lessonTypes = [];
-
-    async function loadData() {
-      const [{ data: profs }, { data: types }] = await Promise.all([
-        sb.from('professors').select('*').eq('club_id', auth.clubId).eq('active', true).order('name'),
-        sb.from('lesson_types').select('*').eq('club_id', auth.clubId).eq('active', true).order('sort_order'),
-      ]);
-      professors = profs || [];
-      lessonTypes = types || [];
-      renderForm();
-    }
 
     function renderForm() {
       document.getElementById('formState').innerHTML = `
@@ -246,14 +347,8 @@
       btn.disabled = true; btn.textContent = 'Salvando...';
 
       const { error } = await sb.from('lessons').insert({
-        professor_id: profId,
-        lesson_type_id: typeId,
-        date,
-        students,
-        total_value: price,
-        prof_value: profVal,
-        club_value: clubeVal,
-        notes: notes || null,
+        professor_id: profId, lesson_type_id: typeId, date, students,
+        total_value: price, prof_value: profVal, club_value: clubeVal, notes: notes || null,
       });
 
       if (error) { alert('Erro ao salvar: ' + error.message); btn.disabled = false; btn.textContent = 'Registrar Aula'; return; }
@@ -264,12 +359,219 @@
       document.getElementById('successDesc').textContent = `${typeName} com ${profName} em ${dateStr}${students.length ? ' — ' + students.join(', ') : ''}`;
       document.getElementById('formState').style.display = 'none';
       document.getElementById('successState').style.display = 'block';
+      await loadHistory();
     }
 
     function resetForm() {
       document.getElementById('successState').style.display = 'none';
       document.getElementById('formState').style.display = 'block';
       renderForm();
+    }
+
+    // ── HISTÓRICO ──
+    let allHistory = [];
+    let histPeriod = 'mes';
+    let histCustom = null;
+
+    const PROF_COLORS = ['#F97316','#8B5CF6','#10B981','#3B82F6','#EC4899','#F59E0B'];
+
+    async function loadHistory() {
+      const profIds = professors.map(p => p.id);
+      if (!profIds.length) return;
+      const { data } = await sb.from('lessons')
+        .select('*, lesson_types(name, color), professors(name)')
+        .in('professor_id', profIds)
+        .order('created_at', { ascending: false })
+        .limit(200);
+      allHistory = data || [];
+      renderHistory();
+    }
+
+    function getHistRange() {
+      const now = new Date(), y = now.getFullYear(), m = now.getMonth();
+      if (histPeriod === 'mes') return { from: new Date(y, m, 1), to: new Date(y, m+1, 0) };
+      if (histPeriod === 'mes_passado') return { from: new Date(y, m-1, 1), to: new Date(y, m, 0) };
+      if (histPeriod === 'ano') return { from: new Date(y, 0, 1), to: new Date(y, 11, 31) };
+      if (histPeriod === 'custom' && histCustom) return { from: new Date(histCustom.from + 'T00:00:00'), to: new Date(histCustom.to + 'T23:59:59') };
+      return null;
+    }
+
+    function setHistPeriod(p, btn) {
+      histPeriod = p;
+      document.querySelectorAll('.hist-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('histCustomRange').classList.remove('open');
+      renderHistory();
+    }
+
+    function toggleHistCustom(btn) {
+      const r = document.getElementById('histCustomRange');
+      const open = r.classList.toggle('open');
+      document.querySelectorAll('.hist-pill').forEach(b => b.classList.remove('active'));
+      if (open) {
+        btn.classList.add('active');
+        const now = new Date(), y = now.getFullYear(), m = now.getMonth();
+        document.getElementById('histFrom').value = new Date(y, m, 1).toISOString().split('T')[0];
+        document.getElementById('histTo').value = new Date(y, m+1, 0).toISOString().split('T')[0];
+      }
+    }
+
+    function applyHistCustom() {
+      const from = document.getElementById('histFrom').value, to = document.getElementById('histTo').value;
+      if (!from || !to || from > to) { alert('Período inválido.'); return; }
+      histCustom = { from, to }; histPeriod = 'custom';
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const range = getHistRange();
+      const filtered = range
+        ? allHistory.filter(l => { const d = new Date(l.date); return d >= range.from && d <= range.to; })
+        : allHistory;
+
+      document.getElementById('histCount').textContent = `${filtered.length} aula${filtered.length !== 1 ? 's' : ''}`;
+
+      if (!filtered.length) {
+        document.getElementById('histList').innerHTML = '<div class="hist-empty">Nenhuma aula neste período.</div>';
+        return;
+      }
+
+      // Build professor color map
+      const profColorMap = {};
+      professors.forEach((p, i) => { profColorMap[p.id] = PROF_COLORS[i % PROF_COLORS.length]; });
+
+      document.getElementById('histList').innerHTML = filtered.map(l => {
+        const date = new Date(l.date + 'T12:00:00');
+        const day = date.getDate().toString().padStart(2, '0');
+        const mon = date.toLocaleString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase();
+        const profName = l.professors?.name || '—';
+        const profColor = profColorMap[l.professor_id] || '#9CA3AF';
+        const typeName = l.lesson_types?.name || '—';
+        const typeColor = l.lesson_types?.color || '#9CA3AF';
+        const students = (l.students || []).join(', ') || 'Sem alunos';
+        return `<div class="hist-item">
+          <div class="hist-date">
+            <div class="hist-date-day">${day}</div>
+            <div class="hist-date-mon">${mon}</div>
+          </div>
+          <div class="hist-divider"></div>
+          <div class="hist-info">
+            <div class="hist-students">${students}</div>
+          </div>
+          <span class="hist-tag" style="background:${profColor}22;color:${profColor}">${profName}</span>
+          <span class="hist-tag" style="background:${typeColor}22;color:${typeColor};margin-left:6px">${typeName}</span>
+          <div style="text-align:right;margin-left:8px;min-width:72px">
+            <div style="font-size:13px;font-weight:700;color:var(--gray-800)">${fmt(l.total_value)}</div>
+          </div>
+          <div class="hist-actions">
+            <button class="hist-btn edit" onclick="openEditModal('${l.id}')" title="Editar">✏️</button>
+            <button class="hist-btn del" onclick="deleteLesson('${l.id}')" title="Excluir">🗑️</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function deleteLesson(id) {
+      if (!confirm('Excluir esta aula?')) return;
+      await sb.from('lessons').delete().eq('id', id);
+      allHistory = allHistory.filter(l => l.id !== id);
+      renderHistory();
+    }
+
+    // ── MODAL EDIÇÃO ──
+    let editingId = null;
+
+    function openEditModal(id) {
+      const l = allHistory.find(x => x.id === id);
+      if (!l) return;
+      editingId = id;
+
+      // Populate professor select
+      document.getElementById('eProf').innerHTML = professors.map(p =>
+        `<option value="${p.id}" ${p.id === l.professor_id ? 'selected' : ''}>${p.name}</option>`).join('');
+      document.getElementById('eDate').value = l.date;
+
+      // Populate type select
+      document.getElementById('eType').innerHTML = lessonTypes.map(t =>
+        `<option value="${t.id}" data-price="${t.total_price}" data-prof="${t.prof_pct}" data-students="${t.num_students}" ${t.id === l.lesson_type_id ? 'selected' : ''}>${t.name}</option>`).join('');
+
+      document.getElementById('ePrice').value = l.total_value;
+      document.getElementById('ePriceGroup').style.display = 'block';
+      recalcEdit();
+
+      // Students
+      const wrap = document.getElementById('eStudentInputs');
+      wrap.innerHTML = '';
+      (l.students || []).forEach(s => {
+        const inp = document.createElement('input');
+        inp.className = 'form-input'; inp.style.marginBottom = '8px';
+        inp.value = s; inp.placeholder = 'Nome do aluno';
+        wrap.appendChild(inp);
+      });
+      if (!l.students?.length) {
+        const inp = document.createElement('input');
+        inp.className = 'form-input'; inp.placeholder = 'Nome do aluno';
+        wrap.appendChild(inp);
+      }
+
+      document.getElementById('eNotes').value = l.notes || '';
+      document.getElementById('editModal').classList.add('open');
+    }
+
+    function closeEditModal() { document.getElementById('editModal').classList.remove('open'); editingId = null; }
+    document.getElementById('editModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeEditModal(); });
+
+    function onEditTypeChange() {
+      const opt = document.getElementById('eType').options[document.getElementById('eType').selectedIndex];
+      if (!opt) return;
+      document.getElementById('ePrice').value = opt.dataset.price;
+      recalcEdit();
+    }
+
+    function recalcEdit() {
+      const sel = document.getElementById('eType');
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt) return;
+      const price = parseFloat(document.getElementById('ePrice').value) || 0;
+      const profPct = parseFloat(opt.dataset.prof);
+      document.getElementById('ePTotal').textContent = fmt(price);
+      document.getElementById('ePProf').textContent = `${fmt(price * profPct / 100)} (${profPct}%)`;
+      document.getElementById('eCalcPreview').style.display = 'block';
+    }
+
+    async function saveEdit() {
+      const profId = document.getElementById('eProf').value;
+      const date = document.getElementById('eDate').value;
+      const typeId = document.getElementById('eType').value;
+      const price = parseFloat(document.getElementById('ePrice').value) || 0;
+      const notes = document.getElementById('eNotes').value.trim();
+      const students = Array.from(document.getElementById('eStudentInputs').querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean);
+      const opt = document.getElementById('eType').options[document.getElementById('eType').selectedIndex];
+      const profPct = parseFloat(opt.dataset.prof);
+      const profVal = price * profPct / 100;
+      const clubeVal = price - profVal;
+
+      const btn = document.getElementById('eSaveBtn');
+      btn.disabled = true; btn.textContent = 'Salvando...';
+      const { error } = await sb.from('lessons').update({
+        professor_id: profId, lesson_type_id: typeId, date, students,
+        total_value: price, prof_value: profVal, club_value: clubeVal, notes: notes || null,
+      }).eq('id', editingId);
+      btn.disabled = false; btn.textContent = 'Salvar';
+      if (error) { alert('Erro: ' + error.message); return; }
+      closeEditModal();
+      await loadHistory();
+    }
+
+    async function loadData() {
+      const [{ data: profs }, { data: types }] = await Promise.all([
+        sb.from('professors').select('*').eq('club_id', auth.clubId).eq('active', true).order('name'),
+        sb.from('lesson_types').select('*').eq('club_id', auth.clubId).eq('active', true).order('sort_order'),
+      ]);
+      professors = profs || [];
+      lessonTypes = types || [];
+      renderForm();
+      await loadHistory();
     }
 
     loadData();
