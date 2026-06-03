@@ -308,15 +308,45 @@
       </div>
     </div>
 
-    <!-- Visão simplificada para professor -->
+    <!-- Visão professor: row 1 -->
     <div class="grid-5-7" id="dRowProf1" style="display:none">
       <div class="card">
         <div class="card-header"><h2>Aulas por Tipo</h2></div>
         <div class="tipo-list" id="dTipoListProf"><div class="empty"><span class="spinner"></span></div></div>
       </div>
       <div class="card">
+        <div class="card-header"><h2>Receita por Tipo</h2></div>
+        <div class="chart-wrap"><canvas id="dDistribChartProf"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Visão professor: row 2 -->
+    <div class="grid-2" id="dRowProf2" style="display:none">
+      <div class="card">
         <div class="card-header"><h2>Evolução Mensal</h2></div>
         <div class="chart-wrap"><canvas id="dEvolChartProf"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>Receita Mensal</h2></div>
+        <div class="chart-wrap"><canvas id="dBarChartProf"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Visão professor: resumo -->
+    <div class="card" id="dRowProf3" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--gray-100)">
+        <div style="background:white;padding:20px;text-align:center">
+          <div style="font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total de Aulas</div>
+          <div style="font-size:26px;font-weight:700;color:var(--purple)" id="dResAulasProf">—</div>
+        </div>
+        <div style="background:white;padding:20px;text-align:center">
+          <div style="font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Total Recebido</div>
+          <div style="font-size:26px;font-weight:700;color:var(--orange)" id="dResReceitaProf">—</div>
+        </div>
+        <div style="background:white;padding:20px;text-align:center">
+          <div style="font-size:11px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Média por Aula</div>
+          <div style="font-size:26px;font-weight:700" id="dResMediaProf">—</div>
+        </div>
       </div>
     </div>
   </div>
@@ -597,13 +627,15 @@
       renderDashEvol();
       renderDashTypeChart(lessons);
     } else {
-      // Visão professor
+      // Visão professor — mesmo layout rico, sem dados do clube
       document.getElementById('dKpiGestor').style.display = 'none';
       document.getElementById('dKpiProf').style.display = 'grid';
       document.getElementById('dRowGestor1').style.display = 'none';
       document.getElementById('dRowGestor2').style.display = 'none';
       document.getElementById('dRowGestor3').style.display = 'none';
       document.getElementById('dRowProf1').style.display = 'grid';
+      document.getElementById('dRowProf2').style.display = 'grid';
+      document.getElementById('dRowProf3').style.display = 'block';
 
       document.getElementById('dKpiAulas2').textContent = aulas;
       document.getElementById('dKpiAulasSub2').textContent = alunos > 0 ? `${alunos} alunos atendidos` : '—';
@@ -613,9 +645,14 @@
       document.getElementById('dKpiProfSub').textContent = aulas > 0 ? `${aulas} aulas no período` : '—';
       document.getElementById('dKpiMedia').textContent = fmt(aulas > 0 ? profVal/aulas : 0);
       document.getElementById('dKpiMediaSub').textContent = 'por aula';
+      document.getElementById('dResAulasProf').textContent = aulas;
+      document.getElementById('dResReceitaProf').textContent = fmt(profVal);
+      document.getElementById('dResMediaProf').textContent = fmt(aulas > 0 ? profVal/aulas : 0);
 
       renderDashTipos(lessons, 'dTipoListProf');
+      renderDistribByType(lessons);
       renderDashEvolProf();
+      renderBarChartProf();
     }
   }
 
@@ -687,6 +724,51 @@
         <span class="tipo-count">${d.count} aulas</span>
         <span class="tipo-val">${fmt(d.total)}</span>
       </div>`).join('');
+  }
+
+  let dDistribChartProfInst = null, dBarChartProfInst = null;
+
+  function renderDistribByType(lessons) {
+    const byType = {};
+    lessons.forEach(l => {
+      const name = l.lesson_types?.name || 'Outro';
+      const color = l.lesson_types?.color || '#9CA3AF';
+      if (!byType[name]) byType[name] = { val: 0, color };
+      byType[name].val += Number(l.prof_value);
+    });
+    const sorted = Object.entries(byType).sort((a, b) => b[1].val - a[1].val);
+    if (dDistribChartProfInst) dDistribChartProfInst.destroy();
+    if (!sorted.length) return;
+    dDistribChartProfInst = new Chart(document.getElementById('dDistribChartProf'), {
+      type: 'doughnut',
+      data: {
+        labels: sorted.map(([n]) => n),
+        datasets: [{ data: sorted.map(([,d]) => d.val), backgroundColor: sorted.map(([,d]) => d.color), borderWidth: 3, borderColor: 'white' }]
+      },
+      options: { responsive: true, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 12 } } } } }
+    });
+  }
+
+  function renderBarChartProf() {
+    const now = new Date();
+    const months = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5-i), 1);
+      return { label: d.toLocaleString('pt-BR', { month: 'short', year: '2-digit' }), year: d.getFullYear(), month: d.getMonth() };
+    });
+    const data = months.map(m => allLessons.filter(l => { const d = new Date(l.date); return d.getFullYear()===m.year && d.getMonth()===m.month; }).reduce((s,l) => s+Number(l.prof_value), 0));
+    if (dBarChartProfInst) dBarChartProfInst.destroy();
+    dBarChartProfInst = new Chart(document.getElementById('dBarChartProf'), {
+      type: 'bar',
+      data: {
+        labels: months.map(m => m.label),
+        datasets: [{ label: 'Recebido (R$)', data, backgroundColor: '#F97316', borderRadius: 6, barPercentage: .6 }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: '#F3F4F6' } } }
+      }
+    });
   }
 
   function renderDashEvolProf() {
