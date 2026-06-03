@@ -93,23 +93,6 @@
     .kpi-card-value.green { color: var(--green); }
     .kpi-card-sub { font-size: 12px; color: var(--gray-400); }
 
-    /* ── PROF FILTER ── */
-    .prof-filter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-    .prof-filter-label { font-size: 12px; font-weight: 500; color: var(--gray-400); margin-right: 2px; }
-    .prof-pill {
-      display: flex; align-items: center; gap: 7px;
-      padding: 6px 14px 6px 8px;
-      border-radius: 99px; border: 1.5px solid var(--gray-200);
-      background: white; cursor: pointer; transition: .15s;
-      font-size: 13px; font-weight: 600; color: var(--gray-600);
-    }
-    .prof-pill:hover { border-color: var(--gray-400); color: var(--gray-900); }
-    .prof-pill.active { border-color: transparent; color: white; }
-    .prof-pill-dot { width: 20px; height: 20px; border-radius: 6px; color: white; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .prof-pill-all { padding: 6px 14px; border-radius: 99px; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; transition: .15s; font-size: 13px; font-weight: 600; color: var(--gray-500); }
-    .prof-pill-all:hover { border-color: var(--gray-400); color: var(--gray-900); }
-    .prof-pill-all.active { background: var(--gray-900); border-color: var(--gray-900); color: white; }
-
     /* ── MAIN ── */
     main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 64px; }
 
@@ -279,11 +262,6 @@
       </div>
     </div>
   </div>
-  <div class="prof-filter" id="profFilter">
-    <span class="prof-filter-label">Professor:</span>
-    <button class="prof-pill-all active" onclick="setProfFilter(null, this)">Todos</button>
-  </div>
-
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-card-top">
@@ -470,13 +448,10 @@
 
   let allLessons = [], professors = [];
   let currentPeriod = 'mes';
-  let currentProfFilter = null; // null = todos
   let customDateFrom = null, customDateTo = null;
   let distribChartInst = null, compChartInst = null, evolChartInst = null;
 
   const PROF_COLORS = ['#F97316','#3B82F6','#10B981','#8B5CF6','#EC4899','#F59E0B'];
-
-  const PROF_COLORS = ['#F97316','#8B5CF6','#10B981','#3B82F6','#EC4899','#F59E0B'];
 
   function logout() { sessionStorage.removeItem('clippa_auth'); window.location.href = 'index.html'; }
   function fmt(n) { return 'R$ ' + Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2 }); }
@@ -524,39 +499,9 @@
   }
 
   function filterLessons(lessons, p) {
-    let result = lessons;
-    // Filter by professor
-    if (currentProfFilter) result = result.filter(l => l.professor_id === currentProfFilter);
-    // Filter by period
     const r = getRange(p);
-    if (!r) return result;
-    return result.filter(l => { const d = new Date(l.date); return d >= r.from && d <= r.to; });
-  }
-
-  function setProfFilter(profId, btn) {
-    currentProfFilter = profId;
-    document.querySelectorAll('.prof-pill, .prof-pill-all').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderAll();
-  }
-
-  function buildProfFilter() {
-    const filter = document.getElementById('profFilter');
-    // Keep label + "Todos" button, add professor pills
-    const existing = filter.querySelectorAll('.prof-pill');
-    existing.forEach(p => p.remove());
-    professors.forEach((p, i) => {
-      const color = PROF_COLORS[i % PROF_COLORS.length];
-      const pill = document.createElement('button');
-      pill.className = 'prof-pill';
-      pill.innerHTML = `<span class="prof-pill-dot" style="background:${color}">${p.name[0]}</span>${p.name}`;
-      pill.onclick = () => {
-        setProfFilter(p.id, pill);
-        pill.style.background = color;
-        pill.style.borderColor = color;
-      };
-      filter.appendChild(pill);
-    });
+    if (!r) return lessons;
+    return lessons.filter(l => { const d = new Date(l.date); return d >= r.from && d <= r.to; });
   }
 
   function setPeriod(p, btn) {
@@ -587,7 +532,6 @@
     document.getElementById('profCountBadge').textContent = `${professors.length} ativos`;
     document.getElementById('statProfs').textContent = professors.length;
 
-    buildProfFilter();
     renderAll();
     renderEvolChart();
   }
